@@ -1,0 +1,42 @@
+// Small formatting/status helpers ported from js/admin-common.js and js/dashboard.js.
+
+export function badgeClassFor(status: string): string {
+  if (status === "Approved" || status === "Confirmed" || status === "Completed") return "badge-success";
+  if (status === "Declined" || status === "Cancelled") return "badge-danger";
+  return "badge-warning";
+}
+
+export function formatDate(dateStr?: string): string {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr + "T00:00:00");
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+}
+
+export function formatBHD(amount: number): string {
+  return `${amount.toFixed(3)} BD`;
+}
+
+export function daysSince(dateStr?: string): number | null {
+  if (!dateStr) return null;
+  const then = new Date(dateStr + "T00:00:00");
+  if (isNaN(then.getTime())) return null;
+  return Math.floor((Date.now() - then.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+export function isOverdue(dateStr?: string): boolean {
+  const d = daysSince(dateStr);
+  return d !== null && d > 0;
+}
+
+const STATUS_CATEGORY: Record<string, "accepted" | "rejected"> = {
+  Approved: "accepted",
+  Confirmed: "accepted",
+  Completed: "accepted",
+  Declined: "rejected",
+  Cancelled: "rejected",
+};
+
+export function statusCategoryFor(status: string): "accepted" | "rejected" | "pending" {
+  return STATUS_CATEGORY[status] || "pending";
+}
