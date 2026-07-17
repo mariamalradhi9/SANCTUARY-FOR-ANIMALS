@@ -1840,6 +1840,7 @@ textarea { resize: vertical; min-height: 100px; }
   }
   .nav-links.nav-open { display: flex; }
   .header-actions .btn { display: none; }
+  .header-actions .btn.logout-btn { display: inline-flex; }
   .nav-toggle { display: inline-flex; }
   .mobile-only { display: block; }
   .row-2, .row-3 { grid-template-columns: 1fr; }

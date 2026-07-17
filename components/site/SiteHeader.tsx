@@ -35,14 +35,13 @@ export default function SiteHeader({ active }: { active?: NavKey }) {
           </Link>
           <button
             type="button"
-            className="icon-btn"
-            aria-label="Logout"
+            className="btn btn-ghost btn-sm logout-btn"
             onClick={() => {
               clearSession();
               router.push("/login");
             }}
           >
-            🚪
+            🚪 Logout
           </button>
           <Link href="/search" className="btn btn-primary btn-sm">Adopt Now</Link>
         </div>
