@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import CartBadge from "./CartBadge";
+import { clearSession } from "@/lib/session";
 
 type NavKey = "home" | "adopt" | "shop" | "dashboard";
 
 export default function SiteHeader({ active }: { active?: NavKey }) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <header className="site-header">
@@ -30,6 +33,17 @@ export default function SiteHeader({ active }: { active?: NavKey }) {
             🛒
             <CartBadge />
           </Link>
+          <button
+            type="button"
+            className="icon-btn"
+            aria-label="Logout"
+            onClick={() => {
+              clearSession();
+              router.push("/login");
+            }}
+          >
+            🚪
+          </button>
           <Link href="/search" className="btn btn-primary btn-sm">Adopt Now</Link>
         </div>
         <button className="nav-toggle" aria-label="Menu" onClick={() => setOpen((v) => !v)}>
