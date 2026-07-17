@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Aamal Almoayyed Sanctuary</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="img/logo.png" alt="Aamal Almoayyed Sanctuary for Animals" class="logo-img"><span class="logo-text"><span class="logo-title">Aamal Almoayyed Sanctuary for Animals</span><span class="logo-sub">Run by BARC</span></span></a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="search.html">Adopt</a>
+      <a href="shop.html" class="active">Shop</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+    <div class="header-actions">
+      <a href="shop.html#cartPanel" class="icon-btn" aria-label="Cart">🛒<span class="badge" data-cart-count>0</span></a>
+      <a href="search.html" class="btn btn-primary btn-sm">Adopt Now</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="checkout-section">
+  <div class="container">
+    <a href="shop.html" class="back-link">← Back to shop</a>
+
+    <div class="section-head" style="text-align:left; margin:0 0 32px;">
+      <span class="eyebrow">Secure Sponsorship</span>
+      <h1>Complete Your Sponsorship</h1>
+      <p>These supplies stay at the sanctuary — our team will use them to feed and care for the animals in our shelter.</p>
+    </div>
+
+    <div id="checkoutLayout" class="checkout-layout">
+
+      <div class="checkout-form-card">
+        <h3>Donor Details</h3>
+        <div class="row-2">
+          <div class="field"><label for="coName">Full Name *</label><input type="text" id="coName" required></div>
+          <div class="field"><label for="coPhone">Phone *</label><input type="tel" id="coPhone" required></div>
+        </div>
+
+        <h3>Payment Details</h3>
+        <div class="field"><label for="coCard">Card Number *</label><input type="text" id="coCard" placeholder="1234 5678 9012 3456" maxlength="19" required></div>
+        <div class="row-2">
+          <div class="field"><label for="coExpiry">Expiry *</label><input type="text" id="coExpiry" placeholder="MM/YY" maxlength="5" required></div>
+          <div class="field"><label for="coCvv">CVV *</label><input type="text" id="coCvv" placeholder="123" maxlength="3" required></div>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-block" id="placeOrderBtn">Confirm Sponsorship</button>
+        <p class="hint" style="text-align:center; margin-top:10px;">This is a demo — no real payment will be processed.</p>
+      </div>
+
+      <div class="checkout-summary-card">
+        <h3>Sponsorship Summary</h3>
+        <div id="checkoutItems"></div>
+        <div class="cart-total"><span>Total</span><strong id="checkoutTotal">0.000 BD</strong></div>
+      </div>
+
+    </div>
+
+    <div id="checkoutSuccess" class="form-card success-box" style="display:none;">
+      <div class="success-icon">🎉</div>
+      <h2>Thank You for Your Sponsorship!</h2>
+      <p id="orderNumberText"></p>
+      <a href="shop.html" class="btn btn-primary">Sponsor More Supplies</a>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo logo-footer">Aamal Almoayyed<br><span>Sanctuary for Animals</span></div>
+        <p style="color:#a9b8b5; margin-top:12px;">Bahrain's biggest sanctuary — giving animals a loving home.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="search.html">Adopt a Pet</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="dashboard.html">My Dashboard</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="adopt.html">Adoption Application</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@aamalalmoayyed.bh</li>
+          <li>+973 1234 5678</li>
+          <li>Manama, Bahrain</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> Aamal Almoayyed Sanctuary. All rights reserved.</span>
+      <span>Made with 🧡 for animals in need.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/checkout.js"></script>
+</body>
+</html>

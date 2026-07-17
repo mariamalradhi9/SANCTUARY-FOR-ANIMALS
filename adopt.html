@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adoption Application — Aamal Almoayyed Sanctuary</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="img/logo.png" alt="Aamal Almoayyed Sanctuary for Animals" class="logo-img"><span class="logo-text"><span class="logo-title">Aamal Almoayyed Sanctuary for Animals</span><span class="logo-sub">Run by BARC</span></span></a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="search.html">Adopt</a>
+      <a href="shop.html">Shop</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+    <div class="header-actions">
+      <a href="shop.html#cartPanel" class="icon-btn" aria-label="Cart">🛒<span class="badge" data-cart-count>0</span></a>
+      <a href="adopt.html" class="btn btn-primary btn-sm active">Adopt Now</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="adopt-form-section">
+  <div class="container">
+    <a href="search.html" class="back-link">← Back</a>
+    <div class="section-head">
+      <span class="eyebrow">Adoption Request</span>
+      <h1>Let's Find a Match</h1>
+      <p>Tell us about yourself and your home so we can match you with the right companion.</p>
+    </div>
+
+    <div class="stepper">
+      <div class="step active" data-step="1"><span class="step-num">👤</span><span class="step-label">Personal Info</span></div>
+      <div class="step-line"></div>
+      <div class="step" data-step="2"><span class="step-num">🐾</span><span class="step-label">Choose Pet</span></div>
+      <div class="step-line"></div>
+      <div class="step" data-step="3"><span class="step-num">✅</span><span class="step-label">Confirm</span></div>
+    </div>
+
+    <div class="adopt-layout">
+    <form id="adoptForm" class="form-card">
+
+      <!-- Step 1 -->
+      <div class="form-step active" data-step="1">
+        <div class="field">
+          <label>Your Photo</label>
+          <div class="profile-photo-field">
+            <div class="profile-photo-preview" id="applicantPhotoPreview">👤</div>
+            <div>
+              <label for="applicantPhotoInput" class="btn btn-outline btn-sm">Upload Photo</label>
+              <input type="file" id="applicantPhotoInput" accept="image/*" style="display:none;">
+              <p class="hint">Optional — helps our team recognize you.</p>
+            </div>
+          </div>
+          <input type="hidden" id="applicantPhoto">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="firstName">First Name *</label>
+            <input type="text" id="firstName" required>
+          </div>
+          <div class="field">
+            <label for="lastName">Last Name *</label>
+            <input type="text" id="lastName" required>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="email">Email *</label>
+            <input type="email" id="email" required>
+          </div>
+          <div class="field">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" required>
+          </div>
+        </div>
+        <div class="field">
+          <label>Gender *</label>
+          <div class="choice-group">
+            <label><input type="radio" name="gender" value="male" required> Male</label>
+            <label><input type="radio" name="gender" value="female"> Female</label>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="maritalStatus">Marital Status</label>
+            <select id="maritalStatus">
+              <option value="single">Single</option>
+              <option value="married">Married</option>
+              <option value="divorced">Divorced</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="housingType">Housing Type</label>
+            <select id="housingType">
+              <option value="apartment">Apartment</option>
+              <option value="house">House</option>
+              <option value="villa">Villa with yard</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="address">Home Address *</label>
+          <textarea id="address" required></textarea>
+        </div>
+        <div class="step-actions">
+          <span></span>
+          <button type="button" class="btn btn-primary next-step">Next: Choose Pet →</button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="form-step" data-step="2">
+        <div class="field">
+          <label for="petChoice">Which pet are you applying for? *</label>
+          <select id="petChoice" required></select>
+        </div>
+        <div class="field">
+          <label>Have you owned a pet before? *</label>
+          <div class="choice-group">
+            <label><input type="radio" name="ownedBefore" value="yes" required> Yes</label>
+            <label><input type="radio" name="ownedBefore" value="no"> No</label>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="householdSize">Household Members</label>
+            <input type="number" id="householdSize" min="1" value="1">
+          </div>
+          <div class="field">
+            <label for="otherPets">Other Pets at Home</label>
+            <input type="text" id="otherPets" placeholder="e.g. 1 cat, none">
+          </div>
+        </div>
+        <div class="field">
+          <label for="whyAdopt">Why do you want to adopt this pet?</label>
+          <textarea id="whyAdopt" placeholder="Tell us a little about why this pet is a good fit for your home…"></textarea>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn btn-ghost prev-step">← Back</button>
+          <button type="button" class="btn btn-primary next-step">Next: Confirm →</button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="form-step" data-step="3">
+        <h3>Review Your Application</h3>
+        <div id="summaryBox" class="summary-box"></div>
+        <div class="field" style="margin-top:20px;">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="agreeTerms" required>
+            I confirm this information is accurate and agree to a home-check visit before adoption is finalized.
+          </label>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn btn-ghost prev-step">← Back</button>
+          <button type="submit" class="btn btn-primary">Submit Application</button>
+        </div>
+      </div>
+
+    </form>
+
+    <aside class="adopt-side">
+      <div class="side-card pet-preview-card">
+        <h4>Applying For</h4>
+        <div id="sidePetPreview" class="side-pet-details"></div>
+      </div>
+      <div class="side-card tips-card">
+        <h4>What Happens Next?</h4>
+        <ul>
+          <li><span class="tip-icon">📩</span> We review your application within 2–3 business days.</li>
+          <li><span class="tip-icon">🏡</span> A placement specialist schedules a home visit.</li>
+          <li><span class="tip-icon">🐾</span> You welcome your new companion home!</li>
+        </ul>
+      </div>
+    </aside>
+    </div>
+
+    <div id="successBox" class="form-card success-box" style="display:none;">
+      <div class="success-icon">🎉</div>
+      <h2>Application Submitted!</h2>
+      <p>Thank you for opening your home to an animal in need. Our placement team will review your application and reach out within 2–3 business days.</p>
+      <a href="dashboard.html" class="btn btn-primary">View My Applications</a>
+    </div>
+
+  </div>
+</section>
+
+<div class="admin-modal-overlay" id="reportModalOverlay" style="display:none;">
+  <div class="admin-modal">
+    <div class="admin-modal-head">
+      <h3 id="reportModalTitle">Behavioral Report</h3>
+      <button type="button" class="admin-modal-close" id="closeReportModal">✕</button>
+    </div>
+    <div id="reportModalBody"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo logo-footer">Aamal Almoayyed<br><span>Sanctuary for Animals</span></div>
+        <p style="color:#a9b8b5; margin-top:12px;">Bahrain's biggest sanctuary — giving animals a loving home.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="search.html">Adopt a Pet</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="dashboard.html">My Dashboard</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="adopt.html">Adoption Application</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@aamalalmoayyed.bh</li>
+          <li>+973 1234 5678</li>
+          <li>Manama, Bahrain</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> Aamal Almoayyed Sanctuary. All rights reserved.</span>
+      <span>Made with 🧡 for animals in need.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/pets-data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/pet-profile.js"></script>
+<script src="js/adopt.js"></script>
+</body>
+</html>

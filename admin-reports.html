@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports — Admin — Aamal Almoayyed Sanctuary</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="admin-app">
+  <header class="admin-topbar">
+    <div class="admin-topbar-inner">
+      <a href="admin.html" class="admin-brand"><img src="img/logo.png" alt="Aamal Almoayyed Sanctuary for Animals"><span>Staff Admin</span><span class="admin-brand-sub">Aamal Almoayyed Sanctuary for Animals · Run by BARC</span></a>
+      <nav class="admin-nav">
+        <a href="admin.html">Dashboard</a>
+        <a href="admin-animals.html">Animals</a>
+        <a href="admin-bookings.html">Bookings</a>
+        <a href="admin-applications.html">Applications</a>
+        <a href="admin-assessment.html">Assessment</a>
+        <a href="admin-reports.html" class="active">Reports</a>
+      </nav>
+      <button type="button" class="btn btn-ghost btn-sm" id="logoutBtn">🚪 Logout</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="container">
+      <div id="toast" class="admin-toast"></div>
+
+      <div class="section-head admin-head" style="text-align:left; margin:0 0 24px;">
+        <div class="admin-card-head" style="margin:0;">
+          <div>
+            <span class="eyebrow">Insights</span>
+            <h1>Reports</h1>
+            <p>A snapshot of adoption and booking activity, computed from current records.</p>
+          </div>
+          <button type="button" class="btn btn-outline" id="exportReportBtn">⬇️ Export Donor / Grant Report (CSV)</button>
+        </div>
+      </div>
+
+      <div class="admin-stats grid-4">
+        <div class="admin-stat">
+          <div class="admin-stat-head"><span>Approval Rate</span><span class="admin-stat-icon">✅</span></div>
+          <h2 id="statApprovalRate">0%</h2>
+          <span id="statApprovalSub" style="font-size:0.8rem; color:var(--color-text-muted);"></span>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat-head"><span>Most Walked Animal</span><span class="admin-stat-icon">🚶</span></div>
+          <h2 id="statMostWalked">—</h2>
+          <span id="statMostWalkedSub" style="font-size:0.8rem; color:var(--color-text-muted);"></span>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat-head"><span>Cancellation Rate</span><span class="admin-stat-icon">✕</span></div>
+          <h2 id="statCancelRate">0%</h2>
+          <span style="font-size:0.8rem; color:var(--color-text-muted);">of all visit bookings</span>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat-head"><span>Total Visitors</span><span class="admin-stat-icon">👥</span></div>
+          <h2 id="statVisitors">0</h2>
+          <span style="font-size:0.8rem; color:var(--color-text-muted);">unique names on file</span>
+        </div>
+      </div>
+
+      <div class="reports-grid">
+        <div class="admin-card">
+          <div class="admin-card-head"><h3>Monthly Booking Activity</h3></div>
+          <div class="bar-chart" id="bookingBarChart"></div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-head"><h3>Operational Notes</h3></div>
+          <ul class="report-notes" id="operationalNotes"></ul>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-head"><h3>🚨 Mandatory Care Alerts</h3></div>
+        <div id="careAlerts"></div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-head"><h3>⏳ Length of Stay (LOS)</h3></div>
+        <p class="hint" style="margin-bottom:14px;">Animals in care the longest — flagged in red past 180 days so they don't get forgotten.</p>
+        <div class="table-scroll" id="losTable"></div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-head"><h3>🔒 Audit Trail</h3></div>
+        <p class="hint" style="margin-bottom:14px;">Every save, status change and assessment is logged here for inspections and incident review.</p>
+        <div class="table-scroll" id="auditTrail"></div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="js/pets-data.js"></script>
+<script src="js/admin-common.js"></script>
+<script src="js/admin-reports.js"></script>
+</body>
+</html>

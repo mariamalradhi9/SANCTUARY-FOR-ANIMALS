@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — Aamal Almoayyed Sanctuary</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="img/logo.png" alt="Aamal Almoayyed Sanctuary for Animals" class="logo-img"><span class="logo-text"><span class="logo-title">Aamal Almoayyed Sanctuary for Animals</span><span class="logo-sub">Run by BARC</span></span></a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="search.html">Adopt</a>
+      <a href="shop.html" class="active">Shop</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+    <div class="header-actions">
+      <a href="shop.html#cartPanel" class="icon-btn" aria-label="Cart">🛒<span class="badge" data-cart-count>0</span></a>
+      <a href="search.html" class="btn btn-primary btn-sm">Adopt Now</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="shop-hero">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Sponsor Our Animals</span>
+      <h1>Sponsor Supplies for Animals in Our Care</h1>
+      <p>Nothing is shipped to you — every item you sponsor here is used directly at the sanctuary to feed, comfort and care for the animals still waiting for a home.</p>
+    </div>
+    <div class="shop-tabs">
+      <button class="shop-tab active" data-cat="all">All</button>
+      <button class="shop-tab" data-cat="food">Food</button>
+      <button class="shop-tab" data-cat="toys">Toys</button>
+      <button class="shop-tab" data-cat="accessories">Accessories</button>
+      <button class="shop-tab" data-cat="treats">Treats</button>
+    </div>
+  </div>
+</section>
+
+<section class="shop-section">
+  <div class="container shop-layout">
+    <div id="productGrid" class="product-grid"></div>
+
+    <aside id="cartPanel" class="cart-panel">
+      <h3>Your Sponsorship</h3>
+      <div id="cartItems"></div>
+      <div class="cart-total">
+        <span>Total</span>
+        <strong id="cartTotal">$0.00</strong>
+      </div>
+      <button class="btn btn-primary btn-block" id="checkoutBtn">Continue to Sponsor</button>
+    </aside>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo logo-footer">Aamal Almoayyed<br><span>Sanctuary for Animals</span></div>
+        <p style="color:#a9b8b5; margin-top:12px;">Bahrain's biggest sanctuary — giving animals a loving home.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="search.html">Adopt a Pet</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="dashboard.html">My Dashboard</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="adopt.html">Adoption Application</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@aamalalmoayyed.bh</li>
+          <li>+973 1234 5678</li>
+          <li>Manama, Bahrain</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> Aamal Almoayyed Sanctuary. All rights reserved.</span>
+      <span>Made with 🧡 for animals in need.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/shop.js"></script>
+</body>
+</html>

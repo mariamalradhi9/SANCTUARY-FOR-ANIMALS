@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pet Profile — Aamal Almoayyed Sanctuary</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="img/logo.png" alt="Aamal Almoayyed Sanctuary for Animals" class="logo-img"><span class="logo-text"><span class="logo-title">Aamal Almoayyed Sanctuary for Animals</span><span class="logo-sub">Run by BARC</span></span></a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="search.html" class="active">Adopt</a>
+      <a href="shop.html">Shop</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+    <div class="header-actions">
+      <a href="shop.html#cartPanel" class="icon-btn" aria-label="Cart">🛒<span class="badge" data-cart-count>0</span></a>
+      <a href="adopt.html" class="btn btn-primary btn-sm">Adopt Now</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="pet-detail">
+  <div class="container">
+    <a href="search.html" class="back-link">← Back to search</a>
+    <div id="petDetailContent" class="detail-grid"></div>
+  </div>
+</section>
+
+<div class="admin-modal-overlay" id="reportModalOverlay" style="display:none;">
+  <div class="admin-modal">
+    <div class="admin-modal-head">
+      <h3 id="reportModalTitle">Behavioral Report</h3>
+      <button type="button" class="admin-modal-close" id="closeReportModal">✕</button>
+    </div>
+    <div id="reportModalBody"></div>
+  </div>
+</div>
+
+<section class="visit-booking-section">
+  <div class="container">
+    <div class="visit-card">
+      <div class="visit-intro">
+        <span class="eyebrow">Meet Them In Person</span>
+        <h2 id="bookingTitle">Book a Visit</h2>
+        <p>Reserve a time slot to take <span id="bookingPetName">this pet</span> for a walk, a play session, or a grooming visit at the sanctuary.</p>
+
+        <div class="activity-choice">
+          <button type="button" class="activity-btn active" data-activity="walk"><span>🚶</span> Walk</button>
+          <button type="button" class="activity-btn" data-activity="play"><span>🎾</span> Playtime</button>
+          <button type="button" class="activity-btn" data-activity="groom"><span>🛁</span> Groom</button>
+        </div>
+
+        <div class="calendar-legend">
+          <span><i class="dot dot-available"></i> Available</span>
+          <span><i class="dot dot-selected"></i> Selected</span>
+          <span><i class="dot dot-full"></i> Fully booked</span>
+        </div>
+      </div>
+
+      <div class="calendar-widget">
+        <div class="calendar-header">
+          <button type="button" class="cal-nav" id="prevMonth" aria-label="Previous month">‹</button>
+          <h4 id="calMonthLabel"></h4>
+          <button type="button" class="cal-nav" id="nextMonth" aria-label="Next month">›</button>
+        </div>
+        <div class="calendar-weekdays">
+          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+
+        <div class="slots-panel" id="slotsPanel" style="display:none;">
+          <h4>Available Times — <span id="selectedDateLabel"></span></h4>
+          <div class="slots-grid" id="slotsGrid"></div>
+        </div>
+
+        <div class="booking-confirm" id="bookingConfirm" style="display:none;">
+          <div class="field">
+            <label for="bookingDuration">How long will you keep them out?</label>
+            <select id="bookingDuration">
+              <option value="1 Hour">1 Hour</option>
+              <option value="2 Hours">2 Hours</option>
+              <option value="3 Hours">3 Hours</option>
+              <option value="Half Day">Half Day</option>
+              <option value="1 Day">1 Day</option>
+              <option value="2 Days">2 Days</option>
+              <option value="3 Days">3 Days</option>
+              <option value="7 Days">7 Days (max)</option>
+            </select>
+          </div>
+          <div class="row-2">
+            <div class="field"><label for="bookingName">Your Name</label><input type="text" id="bookingName"></div>
+            <div class="field"><label for="bookingPhone">Phone</label><input type="tel" id="bookingPhone"></div>
+          </div>
+          <button type="button" class="btn btn-primary btn-block" id="confirmBookingBtn">Confirm Booking</button>
+        </div>
+
+        <div class="booking-success" id="bookingSuccess" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo logo-footer">Aamal Almoayyed<br><span>Sanctuary for Animals</span></div>
+        <p style="color:#a9b8b5; margin-top:12px;">Bahrain's biggest sanctuary — giving animals a loving home.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="search.html">Adopt a Pet</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="dashboard.html">My Dashboard</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="adopt.html">Adoption Application</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@aamalalmoayyed.bh</li>
+          <li>+973 1234 5678</li>
+          <li>Manama, Bahrain</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> Aamal Almoayyed Sanctuary. All rights reserved.</span>
+      <span>Made with 🧡 for animals in need.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/pets-data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/pet-profile.js"></script>
+<script src="js/pet-details.js"></script>
+<script src="js/booking.js"></script>
+</body>
+</html>

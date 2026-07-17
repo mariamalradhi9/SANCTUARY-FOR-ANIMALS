@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard — Aamal Almoayyed Sanctuary</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="img/logo.png" alt="Aamal Almoayyed Sanctuary for Animals" class="logo-img"><span class="logo-text"><span class="logo-title">Aamal Almoayyed Sanctuary for Animals</span><span class="logo-sub">Run by BARC</span></span></a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="search.html">Adopt</a>
+      <a href="shop.html">Shop</a>
+      <a href="dashboard.html" class="active">Dashboard</a>
+    </nav>
+    <div class="header-actions">
+      <a href="shop.html#cartPanel" class="icon-btn" aria-label="Cart">🛒<span class="badge" data-cart-count>0</span></a>
+      <a href="search.html" class="btn btn-primary btn-sm">Adopt Now</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="dashboard">
+  <div class="container dashboard-grid">
+
+    <aside class="dash-sidebar">
+      <div class="dash-profile">
+        <div class="dash-avatar" id="dashAvatar">👤</div>
+        <h3>Sarina Adams</h3>
+        <p>sarina@example.com</p>
+      </div>
+      <ul class="dash-nav">
+        <li><a href="#" class="dash-link active" data-tab="applications">📄 My Applications</a></li>
+        <li><a href="#" class="dash-link" data-tab="saved">🤍 Saved Pets</a></li>
+        <li><a href="#" class="dash-link" data-tab="messages">💬 Messages</a></li>
+        <li><a href="#" class="dash-link" data-tab="settings">⚙️ Settings</a></li>
+      </ul>
+      <ul class="dash-nav dash-nav-footer">
+        <li><a href="#" class="dash-link" id="dashLogoutLink">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <div class="dash-content">
+
+      <div class="dash-panel active" data-panel="applications">
+        <h2>My Applications</h2>
+        <div class="status-filter-bar" id="statusFilterBar">
+          <button type="button" class="status-filter-btn active" data-status="all">All</button>
+          <button type="button" class="status-filter-btn" data-status="accepted">✓ Accepted</button>
+          <button type="button" class="status-filter-btn" data-status="pending">⏳ Pending</button>
+          <button type="button" class="status-filter-btn" data-status="rejected">✕ Rejected</button>
+        </div>
+        <div id="applicationsList"></div>
+      </div>
+
+      <div class="dash-panel" data-panel="saved">
+        <h2>Saved Pets</h2>
+        <div id="savedList" class="grid-3"></div>
+      </div>
+
+      <div class="dash-panel" data-panel="messages">
+        <h2>Messages</h2>
+        <ul class="message-list">
+          <li class="message-item">
+            <div class="message-avatar">🏡</div>
+            <div>
+              <strong>Placement Team</strong>
+              <p>Thanks for your interest in Mochi! We'd like to schedule a home visit — what does your week look like?</p>
+              <span class="message-date">2 days ago</span>
+            </div>
+          </li>
+          <li class="message-item">
+            <div class="message-avatar">🩺</div>
+            <div>
+              <strong>Vet Care Team</strong>
+              <p>A reminder that Biscuit's next check-up is coming up. Let us know if you'd like to reschedule.</p>
+              <span class="message-date">1 week ago</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dash-panel" data-panel="settings">
+        <h2>Account Settings</h2>
+        <div class="profile-photo-field">
+          <div class="profile-photo-preview" id="profilePhotoPreview">👤</div>
+          <div>
+            <label for="profilePhotoInput" class="btn btn-outline btn-sm">Upload Photo</label>
+            <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;">
+            <p class="hint">JPG or PNG, shown on your profile.</p>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="settingsName">Full Name</label>
+            <input type="text" id="settingsName" value="Sarina Adams">
+          </div>
+          <div class="field">
+            <label for="settingsEmail">Email</label>
+            <input type="email" id="settingsEmail" value="sarina@example.com">
+          </div>
+        </div>
+        <div class="field">
+          <label><input type="checkbox" checked style="width:auto; margin-right:8px;">Email me about new pets matching my preferences</label>
+        </div>
+        <button class="btn btn-primary">Save Changes</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo logo-footer">Aamal Almoayyed<br><span>Sanctuary for Animals</span></div>
+        <p style="color:#a9b8b5; margin-top:12px;">Bahrain's biggest sanctuary — giving animals a loving home.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="search.html">Adopt a Pet</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="dashboard.html">My Dashboard</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="adopt.html">Adoption Application</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@aamalalmoayyed.bh</li>
+          <li>+973 1234 5678</li>
+          <li>Manama, Bahrain</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> Aamal Almoayyed Sanctuary. All rights reserved.</span>
+      <span>Made with 🧡 for animals in need.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/pets-data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Behavioral Assessment — Admin — Aamal Almoayyed Sanctuary</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="admin-app">
+  <header class="admin-topbar no-print">
+    <div class="admin-topbar-inner">
+      <a href="admin.html" class="admin-brand"><img src="img/logo.png" alt="Aamal Almoayyed Sanctuary for Animals"><span>Staff Admin</span><span class="admin-brand-sub">Aamal Almoayyed Sanctuary for Animals · Run by BARC</span></a>
+      <nav class="admin-nav">
+        <a href="admin.html">Dashboard</a>
+        <a href="admin-animals.html">Animals</a>
+        <a href="admin-bookings.html">Bookings</a>
+        <a href="admin-applications.html">Applications</a>
+        <a href="admin-assessment.html" class="active">Assessment</a>
+        <a href="admin-reports.html">Reports</a>
+      </nav>
+      <button type="button" class="btn btn-ghost btn-sm" id="logoutBtn">🚪 Logout</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="container">
+      <div id="toast" class="admin-toast no-print"></div>
+
+      <span class="eyebrow no-print">Staff Use Only</span>
+
+      <form id="assessmentForm" class="assessment-doc">
+
+        <div class="doc-header">
+          <img src="img/logo.png" alt="Aamal Almoayyed Sanctuary for Animals" class="doc-logo">
+          <h1>Aamal Almoayyed Sanctuary</h1>
+          <p class="doc-tagline">Bahrain's Biggest Sanctuary — Giving Animals a Loving Home</p>
+          <h2 class="doc-title">Official Canine Behavioral &amp; Temperament Assessment (CBTA)</h2>
+        </div>
+
+        <div class="field no-print" style="max-width:420px; margin:0 auto 28px;">
+          <label for="assessAnimal">Select Animal *</label>
+          <select id="assessAnimal" required></select>
+          <p class="hint">Results will be published to this animal's public profile.</p>
+        </div>
+
+        <div class="stepper assess-stepper no-print">
+          <div class="step active" data-step="1"><span class="step-num">🐕</span><span class="step-label">Intake</span></div>
+          <div class="step-line"></div>
+          <div class="step" data-step="2"><span class="step-num">🧠</span><span class="step-label">Profiling</span></div>
+          <div class="step-line"></div>
+          <div class="step" data-step="3"><span class="step-num">⚡</span><span class="step-label">Drives</span></div>
+          <div class="step-line"></div>
+          <div class="step" data-step="4"><span class="step-num">🐾</span><span class="step-label">Dog-to-Dog</span></div>
+          <div class="step-line"></div>
+          <div class="step" data-step="5"><span class="step-num">⚠️</span><span class="step-label">Safety</span></div>
+          <div class="step-line"></div>
+          <div class="step" data-step="6"><span class="step-num">🏁</span><span class="step-label">Disposition</span></div>
+        </div>
+
+        <div class="assess-step active" data-step="1">
+          <h3 class="section-title"><span class="sec-icon">🐕</span> I. Specimen &amp; Intake Data</h3>
+          <div class="row-2">
+            <div class="field"><label for="dogName">Dog Name / ID</label><input type="text" id="dogName"></div>
+            <div class="field"><label for="evalDate">Date of Evaluation</label><input type="date" id="evalDate"></div>
+          </div>
+          <div class="field"><label for="breedMix">Phenotype / Breed Mix</label><input type="text" id="breedMix"></div>
+          <div class="row-2">
+            <div class="field">
+              <label>Sex</label>
+              <div class="choice-group">
+                <label><input type="radio" name="sex" value="M"> M</label>
+                <label><input type="radio" name="sex" value="F"> F</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Altered (Neutered/Spayed)</label>
+              <div class="choice-group">
+                <label><input type="radio" name="altered" value="Y"> Y</label>
+                <label><input type="radio" name="altered" value="N"> N</label>
+              </div>
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label for="weightCondition">Weight / Condition</label><input type="text" id="weightCondition"></div>
+            <div class="field"><label for="estAge">Estimated Age</label><input type="text" id="estAge"></div>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Vaccinated</label>
+              <div class="choice-group">
+                <label><input type="radio" name="vaccinated" value="Y"> Y</label>
+                <label><input type="radio" name="vaccinated" value="N"> N</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Good with Kids</label>
+              <div class="choice-group">
+                <label><input type="radio" name="goodWithKids" value="Y"> Y</label>
+                <label><input type="radio" name="goodWithKids" value="N"> N</label>
+              </div>
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label for="specialist">Placement &amp; Integration Specialist</label><input type="text" id="specialist"></div>
+            <div class="field"><label for="location">Location</label><input type="text" id="location"></div>
+          </div>
+          <div class="step-actions no-print">
+            <span></span>
+            <button type="button" class="btn btn-primary next-step">Next: Psychological Profiling →</button>
+          </div>
+        </div>
+
+        <div class="assess-step" data-step="2">
+          <h3 class="section-title"><span class="sec-icon">🧠</span> II. Psychological Profiling (Temperament)</h3>
+          <p class="hint">Rate on a scale of 1–5 (1: Minimal/Low | 5: Intense/High Expression)</p>
+          <table class="profile-table">
+            <thead>
+              <tr><th>Behavioral Metric</th><th>Score</th><th>Clinical Behavioral Markers</th></tr>
+            </thead>
+            <tbody id="profileTableBody"></tbody>
+          </table>
+          <div class="step-actions no-print">
+            <button type="button" class="btn btn-ghost prev-step">← Back</button>
+            <button type="button" class="btn btn-primary next-step">Next: Drive Analysis →</button>
+          </div>
+        </div>
+
+        <div class="assess-step" data-step="3">
+          <h3 class="section-title"><span class="sec-icon">⚡</span> III. Drive System Analysis (Motivation)</h3>
+
+          <h4 class="sub-title">1. Prey / Toy Drive (Biological Pursuit)</h4>
+          <div class="option-list">
+            <label class="option-card"><input type="radio" name="preyDrive" value="Inert"><span><strong>Inert:</strong> No visual tracking; disinterested in movement.</span></label>
+            <label class="option-card"><input type="radio" name="preyDrive" value="Investigative"><span><strong>Investigative:</strong> Tracks movement; sniffs; no pursuit.</span></label>
+            <label class="option-card"><input type="radio" name="preyDrive" value="Active"><span><strong>Active:</strong> Commits to pursuit; exhibits "shake" or "kill" bite-down.</span></label>
+            <label class="option-card"><input type="radio" name="preyDrive" value="Hyper-Fixated"><span><strong>Hyper-Fixated:</strong> Inability to disengage; high risk for small animals.</span></label>
+          </div>
+
+          <h4 class="sub-title">2. Food Drive (Resource Motivation)</h4>
+          <div class="option-list">
+            <label class="option-card"><input type="radio" name="foodDrive" value="Functional"><span><strong>Functional:</strong> Motivated by treats; takes food gently.</span></label>
+            <label class="option-card"><input type="radio" name="foodDrive" value="Competitive"><span><strong>Competitive:</strong> Aggressive snatching; potential for guarding.</span></label>
+            <label class="option-card"><input type="radio" name="foodDrive" value="Anorectic"><span><strong>Anorectic:</strong> Refuses high-value food due to shutdown/fear.</span></label>
+          </div>
+
+          <h4 class="sub-title">3. Social Drive (Handler Attachment)</h4>
+          <div class="option-list">
+            <label class="option-card"><input type="radio" name="socialDrive" value="Independent"><span><strong>Independent:</strong> Prioritizes environment over human; aloof.</span></label>
+            <label class="option-card"><input type="radio" name="socialDrive" value="Cooperative"><span><strong>Cooperative:</strong> Checks in with handler; responds to praise.</span></label>
+            <label class="option-card"><input type="radio" name="socialDrive" value="Anxious/Velcro"><span><strong>Anxious/Velcro:</strong> Hyper-attachment; distress upon handler exit.</span></label>
+          </div>
+          <div class="step-actions no-print">
+            <button type="button" class="btn btn-ghost prev-step">← Back</button>
+            <button type="button" class="btn btn-primary next-step">Next: Dog-to-Dog Dynamics →</button>
+          </div>
+        </div>
+
+        <div class="assess-step" data-step="4">
+          <h3 class="section-title"><span class="sec-icon">🐾</span> IV. Intraspecific Dynamics (Dog-to-Dog)</h3>
+
+          <h4 class="sub-title">A. Social Orientation</h4>
+          <div class="option-list">
+            <label class="option-card"><input type="radio" name="socialOrientation" value="Pro-Social"><span><strong>Pro-Social:</strong> Actively seeks play; uses healthy cut-off signals.</span></label>
+            <label class="option-card"><input type="radio" name="socialOrientation" value="Neutral/Tolerant"><span><strong>Neutral/Tolerant:</strong> Ignores others; coexists without engagement.</span></label>
+            <label class="option-card"><input type="radio" name="socialOrientation" value="Selective"><span><strong>Selective:</strong> Tolerates specific types (e.g., opposite sex only).</span></label>
+            <label class="option-card"><input type="radio" name="socialOrientation" value="Reactive/Fear Aggressive"><span><strong>Reactive/Fear Aggressive:</strong> Lunges/barks to create distance due to insecurity.</span></label>
+          </div>
+
+          <h4 class="sub-title">B. Dominance &amp; Status-Based Markers</h4>
+          <div class="field">
+            <label>Posturing</label>
+            <div class="chip-list">
+              <label class="chip"><input type="checkbox" name="posturing" value="T-Positioning"> T-Positioning</label>
+              <label class="chip"><input type="checkbox" name="posturing" value="Chin-over-shoulder"> Chin-over-shoulder</label>
+              <label class="chip"><input type="checkbox" name="posturing" value="Height seeking"> Height seeking</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Space Claiming</label>
+            <div class="chip-list">
+              <label class="chip"><input type="checkbox" name="spaceClaiming" value="Physical Blocking doorways"> Physical Blocking doorways</label>
+              <label class="chip"><input type="checkbox" name="spaceClaiming" value="Guarding the handler"> Guarding the handler</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Social Yield — Does dog yield space when pressured?</label>
+            <div class="choice-group">
+              <label><input type="radio" name="socialYield" value="Yes"> Yes</label>
+              <label><input type="radio" name="socialYield" value="No"> No</label>
+            </div>
+          </div>
+          <div class="step-actions no-print">
+            <button type="button" class="btn btn-ghost prev-step">← Back</button>
+            <button type="button" class="btn btn-primary next-step">Next: Safety &amp; Bite Log →</button>
+          </div>
+        </div>
+
+        <div class="assess-step" data-step="5">
+          <h3 class="section-title"><span class="sec-icon">⚠️</span> V. Safety Indicators &amp; Bite Log</h3>
+          <div class="field">
+            <label>Observed Red Flags</label>
+            <div class="chip-list">
+              <label class="chip chip-danger"><input type="checkbox" name="redFlags" value="Resource Guarding"> Resource Guarding</label>
+              <label class="chip chip-danger"><input type="checkbox" name="redFlags" value="Barrier Frustration"> Barrier Frustration</label>
+              <label class="chip chip-danger"><input type="checkbox" name="redFlags" value="Redirected Aggression"> Redirected Aggression</label>
+              <label class="chip chip-danger"><input type="checkbox" name="redFlags" value="Status Driven"> Status Driven</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="incidentHistory">Incident History</label>
+            <textarea id="incidentHistory" rows="6" placeholder="Describe any incidents, dates, and context…"></textarea>
+          </div>
+          <div class="step-actions no-print">
+            <button type="button" class="btn btn-ghost prev-step">← Back</button>
+            <button type="button" class="btn btn-primary next-step">Next: Final Disposition →</button>
+          </div>
+        </div>
+
+        <div class="assess-step" data-step="6">
+          <h3 class="section-title"><span class="sec-icon">🏁</span> VI. Final Disposition</h3>
+          <div class="disposition-list">
+            <label class="disposition-option level-green">
+              <input type="radio" name="disposition" value="Level 1 (Green)">
+              <span><strong>Level 1 (Green): Public-Ready.</strong> High sociability; no guarding.</span>
+            </label>
+            <label class="disposition-option level-blue">
+              <input type="radio" name="disposition" value="Level 2 (Blue)">
+              <span><strong>Level 2 (Blue): Managed.</strong> Minor reactivity; requires training.</span>
+            </label>
+            <label class="disposition-option level-yellow">
+              <input type="radio" name="disposition" value="Level 3 (Yellow)">
+              <span><strong>Level 3 (Yellow): Specialized.</strong> High drive; experienced handler only.</span>
+            </label>
+            <label class="disposition-option level-orange">
+              <input type="radio" name="disposition" value="Level 4 (Orange)">
+              <span><strong>Level 4 (Orange): Sanctuary Rehabilitation.</strong></span>
+            </label>
+            <div class="disposition-subtypes">
+              <label><input type="checkbox" name="orangeSubtype" value="Behavioral"> Subtype A: Behavioral (Chronic aggression/guarding)</label>
+              <label><input type="checkbox" name="orangeSubtype" value="Clinical Fear"> Subtype B: Clinical Fear (Total shutdown/catatonic)</label>
+            </div>
+            <label class="disposition-option level-red">
+              <input type="radio" name="disposition" value="Level 5 (Red)">
+              <span><strong>Level 5 (Red): Strict Safety Protocol.</strong> Extreme risk; dual-handler / no contact.</span>
+            </label>
+          </div>
+
+          <h3 class="section-title">Sign-Off</h3>
+          <div class="field"><label for="signSpecialist">Placement &amp; Integration Specialist</label><input type="text" id="signSpecialist"></div>
+          <div class="row-2">
+            <div class="field"><label for="signature">Signature</label><input type="text" id="signature" placeholder="Type full name to sign"></div>
+            <div class="field"><label for="signDate">Date</label><input type="date" id="signDate"></div>
+          </div>
+
+          <div class="step-actions no-print">
+            <button type="button" class="btn btn-ghost prev-step">← Back</button>
+            <span></span>
+          </div>
+
+          <div class="doc-actions no-print">
+            <button type="button" class="btn btn-ghost" id="printBtn">🖨️ Print / Export PDF</button>
+            <button type="submit" class="btn btn-primary">Save &amp; Publish to Animal Profile</button>
+          </div>
+
+          <p id="saveConfirm" class="save-confirm no-print" style="display:none;">✅ Assessment saved and published to the animal's profile.</p>
+        </div>
+
+      </form>
+    </div>
+  </main>
+</div>
+
+<script src="js/pets-data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/admin-common.js"></script>
+<script src="js/pet-profile.js"></script>
+<script src="js/assessment-form.js"></script>
+</body>
+</html>

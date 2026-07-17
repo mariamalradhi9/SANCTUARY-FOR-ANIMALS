@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adopt — Aamal Almoayyed Sanctuary</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="img/logo.png" alt="Aamal Almoayyed Sanctuary for Animals" class="logo-img"><span class="logo-text"><span class="logo-title">Aamal Almoayyed Sanctuary for Animals</span><span class="logo-sub">Run by BARC</span></span></a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="search.html" class="active">Adopt</a>
+      <a href="shop.html">Shop</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+    <div class="header-actions">
+      <a href="shop.html#cartPanel" class="icon-btn" aria-label="Cart">🛒<span class="badge" data-cart-count>0</span></a>
+      <a href="adopt.html" class="btn btn-primary btn-sm">Adopt Now</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="search-hero">
+  <div class="container">
+    <h1>Search &amp; Find a Companion</h1>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by name or breed…">
+      <button class="btn btn-primary" id="searchBtn">Search</button>
+    </div>
+  </div>
+</section>
+
+<section class="results">
+  <div class="container results-grid">
+
+    <div id="petGrid" class="grid-3 pet-grid"></div>
+
+    <aside class="filter-panel">
+      <h3>Advanced Filter</h3>
+
+      <div class="field">
+        <label for="fSpecies">Species</label>
+        <select id="fSpecies">
+          <option value="">All</option>
+          <option value="dog">Dog</option>
+          <option value="cat">Cat</option>
+          <option value="rabbit">Rabbit</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="fSize">Size</label>
+        <select id="fSize">
+          <option value="">Any</option>
+          <option value="small">Small</option>
+          <option value="medium">Medium</option>
+          <option value="large">Large</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="fGender">Gender</label>
+        <select id="fGender">
+          <option value="">Any</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="fAge">Max Age (years)</label>
+        <select id="fAge">
+          <option value="">Any</option>
+          <option value="1">Under 1</option>
+          <option value="2">Under 2</option>
+          <option value="5">Under 5</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="fSort">Sort By</label>
+        <select id="fSort">
+          <option value="name">Name (A–Z)</option>
+          <option value="age-asc">Youngest First</option>
+          <option value="age-desc">Oldest First</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="applyFilters">Apply Filters</button>
+      <button class="btn btn-ghost btn-block" id="resetFilters" style="margin-top:10px;">Reset</button>
+    </aside>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo logo-footer">Aamal Almoayyed<br><span>Sanctuary for Animals</span></div>
+        <p style="color:#a9b8b5; margin-top:12px;">Bahrain's biggest sanctuary — giving animals a loving home.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="search.html">Adopt a Pet</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="dashboard.html">My Dashboard</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="adopt.html">Adoption Application</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@aamalalmoayyed.bh</li>
+          <li>+973 1234 5678</li>
+          <li>Manama, Bahrain</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> Aamal Almoayyed Sanctuary. All rights reserved.</span>
+      <span>Made with 🧡 for animals in need.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/pets-data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/search.js"></script>
+</body>
+</html>
