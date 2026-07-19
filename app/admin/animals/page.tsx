@@ -5,6 +5,7 @@ import AuthGuard from "@/components/AuthGuard";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import AnimalFormModal, { type AnimalFormData } from "@/components/admin/AnimalFormModal";
 import AnimalHistoryModal from "@/components/admin/AnimalHistoryModal";
+import AnimalViewModal from "@/components/admin/AnimalViewModal";
 import { addAnimal, deleteAnimal, getAnimals, updateAnimal } from "@/lib/animals";
 import { logAudit } from "@/lib/admin/audit";
 import { useToast } from "@/lib/admin/useToast";
@@ -29,6 +30,7 @@ export default function AdminAnimalsPage() {
   const [formOpen, setFormOpen] = useState(false);
   const [editingAnimal, setEditingAnimal] = useState<Animal | null>(null);
   const [historyPetId, setHistoryPetId] = useState<string | null>(null);
+  const [viewingAnimal, setViewingAnimal] = useState<Animal | null>(null);
 
   useEffect(() => {
     setAnimals(getAnimals());
@@ -132,7 +134,7 @@ export default function AdminAnimalsPage() {
                           {tags.map((t) => <span key={t}>{t}</span>)}
                         </div>
                         <div className="animal-card-actions">
-                          <a href={`/pet-details?pet=${a.id}`} className="btn btn-ghost" target="_blank" rel="noreferrer">View</a>
+                          <button type="button" className="btn btn-ghost" onClick={() => setViewingAnimal(a)}>View</button>
                           <button type="button" className="btn btn-outline" onClick={() => openEditModal(a)}>Edit</button>
                           <a href={`/admin/assessment?pet=${a.id}`} className="btn btn-ghost">🩺 Assessment</a>
                           <button type="button" className="btn btn-ghost" onClick={() => setHistoryPetId(a.id)}>🕓 History</button>
@@ -150,6 +152,7 @@ export default function AdminAnimalsPage() {
 
       <AnimalFormModal open={formOpen} animal={editingAnimal} onClose={() => setFormOpen(false)} onSave={handleSave} />
       <AnimalHistoryModal petId={historyPetId} onClose={() => setHistoryPetId(null)} />
+      <AnimalViewModal animal={viewingAnimal} onClose={() => setViewingAnimal(null)} />
     </AuthGuard>
   );
 }
