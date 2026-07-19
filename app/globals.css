@@ -124,12 +124,14 @@ section { padding: 64px 0; }
 .btn-block { width: 100%; }
 .btn-sm { padding: 8px 18px; font-size: 0.85rem; }
 
-.btn-icon { width: 15px; height: 15px; vertical-align: -2px; margin-right: 2px; }
+.btn-icon { display: inline-block; width: 15px; height: 15px; vertical-align: -2px; margin-right: 2px; }
 
-/* Inline icon images that replace emoji, sized relative to their text context. */
-.icon-img-sm { width: 16px; height: 16px; vertical-align: -3px; margin-right: 2px; }
-.icon-img-md { width: 20px; height: 20px; vertical-align: -4px; margin-right: 2px; }
-.icon-img-lg { width: 26px; height: 26px; vertical-align: -5px; }
+/* Inline icon images that replace emoji, sized relative to their text context.
+   display:inline-block overrides the global `img { display:block }` reset above,
+   which would otherwise force these onto their own line instead of sitting next to the text. */
+.icon-img-sm { display: inline-block; width: 16px; height: 16px; vertical-align: -3px; margin-right: 2px; }
+.icon-img-md { display: inline-block; width: 20px; height: 20px; vertical-align: -4px; margin-right: 2px; }
+.icon-img-lg { display: inline-block; width: 26px; height: 26px; vertical-align: -5px; }
 .icon-img-avatar { width: 60%; height: 60%; object-fit: contain; opacity: 0.6; }
 
 /* ---------------------------------- Header ---------------------------------- */
@@ -1642,6 +1644,7 @@ textarea { resize: vertical; min-height: 100px; }
   grid-template-columns: 1.5fr 1fr;
   gap: 24px;
   align-items: start;
+  margin-bottom: 28px;
 }
 .reports-grid .admin-card { margin-bottom: 0; height: 100%; }
 
