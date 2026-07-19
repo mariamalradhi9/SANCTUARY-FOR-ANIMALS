@@ -13,7 +13,7 @@ function ApplicantAvatar({ app, size }: { app: Application; size: number }) {
   return <span className="admin-stat-icon" style={{ width: size, height: size, fontSize: size > 50 ? "1.4rem" : "0.9rem" }}>{letter}</span>;
 }
 
-function DetailGroup({ title, rows }: { title: string; rows: [string, string | number | undefined][] }) {
+function DetailGroup({ title, rows }: { title: React.ReactNode; rows: [string, string | number | undefined][] }) {
   return (
     <div className="app-detail-group">
       <h4>{title}</h4>
@@ -49,7 +49,7 @@ export default function ApplicationDetailModal({ application, onClose }: { appli
         )}
       </div>
 
-      <DetailGroup title="👤 Contact" rows={[
+      <DetailGroup title={<><img src="/icons/user.png" alt="" className="icon-img-sm" /> Contact</>} rows={[
         ["Email", application.email],
         ["Phone", application.phone],
         ["Gender", application.gender],

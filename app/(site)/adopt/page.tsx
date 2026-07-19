@@ -154,11 +154,11 @@ function AdoptInner() {
 
           {!submitted && (
             <div className="stepper">
-              <div className={`step${step === 1 ? " active" : ""}${step > 1 ? " done" : ""}`} data-step="1"><span className="step-num">👤</span><span className="step-label">Personal Info</span></div>
+              <div className={`step${step === 1 ? " active" : ""}${step > 1 ? " done" : ""}`} data-step="1"><span className="step-num"><img src="/icons/user.png" alt="" /></span><span className="step-label">Personal Info</span></div>
               <div className={`step-line${step > 1 ? " done" : ""}`}></div>
-              <div className={`step${step === 2 ? " active" : ""}${step > 2 ? " done" : ""}`} data-step="2"><span className="step-num">🐾</span><span className="step-label">Choose Pet</span></div>
+              <div className={`step${step === 2 ? " active" : ""}${step > 2 ? " done" : ""}`} data-step="2"><span className="step-num"><img src="/icons/paw.png" alt="" /></span><span className="step-label">Choose Pet</span></div>
               <div className={`step-line${step > 2 ? " done" : ""}`}></div>
-              <div className={`step${step === 3 ? " active" : ""}`} data-step="3"><span className="step-num">✅</span><span className="step-label">Confirm</span></div>
+              <div className={`step${step === 3 ? " active" : ""}`} data-step="3"><span className="step-num"><img src="/icons/check-clock.png" alt="" /></span><span className="step-label">Confirm</span></div>
             </div>
           )}
 
@@ -170,7 +170,7 @@ function AdoptInner() {
                     <label>Your Photo</label>
                     <div className="profile-photo-field">
                       <div className="profile-photo-preview">
-                        {form.applicantPhoto ? <img src={form.applicantPhoto} alt="Your photo" /> : "👤"}
+                        {form.applicantPhoto ? <img src={form.applicantPhoto} alt="Your photo" /> : <img src="/icons/user.png" alt="" />}
                       </div>
                       <div>
                         <label htmlFor="applicantPhotoInput" className="btn btn-outline btn-sm">Upload Photo</label>
@@ -316,7 +316,7 @@ function AdoptInner() {
                   <ul>
                     <li><span className="tip-icon">📩</span> We review your application within 2–3 business days.</li>
                     <li><span className="tip-icon">🏡</span> A placement specialist schedules a home visit.</li>
-                    <li><span className="tip-icon">🐾</span> You welcome your new companion home!</li>
+                    <li><span className="tip-icon"><img src="/icons/paw.png" alt="" /></span> You welcome your new companion home!</li>
                   </ul>
                 </div>
               </aside>

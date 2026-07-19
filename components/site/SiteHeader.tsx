@@ -30,7 +30,7 @@ export default function SiteHeader({ active }: { active?: NavKey }) {
         </nav>
         <div className="header-actions">
           <Link href="/shop#cartPanel" className="icon-btn" aria-label="Cart">
-            🛒
+            <img src="/icons/cart.png" alt="" />
             <CartBadge />
           </Link>
           <button
@@ -41,7 +41,7 @@ export default function SiteHeader({ active }: { active?: NavKey }) {
               router.push("/login");
             }}
           >
-            🚪 Logout
+            <img src="/icons/logout.png" alt="" className="btn-icon" /> Logout
           </button>
           <Link href="/search" className="btn btn-primary btn-sm">Adopt Now</Link>
         </div>

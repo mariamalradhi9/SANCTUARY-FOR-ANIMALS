@@ -16,11 +16,20 @@ export function logAudit(action: string, summary: string): void {
 }
 
 export const AUDIT_ACTION_LABELS: Record<string, string> = {
-  "animal-onboarded": "🐾 Animal Onboarded",
-  "animal-update": "✏️ Animal Updated",
+  "animal-onboarded": "Animal Onboarded",
+  "animal-update": "Animal Updated",
   "animal-deleted": "🗑️ Animal Removed",
   "assessment-saved": "🧠 Assessment Saved",
-  "booking-status": "📅 Booking Status Changed",
-  "application-status": "📄 Application Status Changed",
-  "report-exported": "⬇️ Report Exported",
+  "booking-status": "Booking Status Changed",
+  "application-status": "Application Status Changed",
+  "report-exported": "Report Exported",
+};
+
+/** Icons for actions that have a dedicated one; actions without an entry here keep their emoji baked into AUDIT_ACTION_LABELS above. */
+export const AUDIT_ACTION_ICONS: Record<string, string> = {
+  "animal-onboarded": "/icons/paw.png",
+  "animal-update": "/icons/edit.png",
+  "booking-status": "/icons/calendar.png",
+  "application-status": "/icons/documents.png",
+  "report-exported": "/icons/export.png",
 };

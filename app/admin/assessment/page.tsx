@@ -7,18 +7,17 @@ import AdminTopbar from "@/components/admin/AdminTopbar";
 import { getAnimals } from "@/lib/animals";
 import { getLatestAssessment, saveAssessment } from "@/lib/records";
 import { logAudit } from "@/lib/admin/audit";
-import { PROFILE_METRIC_LABELS } from "@/lib/petProfile";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Assessment } from "@/lib/types";
 
 const TOTAL_STEPS = 6;
 
-const STEPS = [
+const STEPS: { n: number; icon: React.ReactNode; label: string }[] = [
   { n: 1, icon: "🐕", label: "Intake" },
   { n: 2, icon: "🧠", label: "Profiling" },
   { n: 3, icon: "⚡", label: "Drives" },
-  { n: 4, icon: "🐾", label: "Dog-to-Dog" },
+  { n: 4, icon: <img src="/icons/paw.png" alt="" />, label: "Dog-to-Dog" },
   { n: 5, icon: "⚠️", label: "Safety" },
   { n: 6, icon: "🏁", label: "Disposition" },
 ];
@@ -291,7 +290,7 @@ function AssessmentPageInner() {
 
               {step === 4 && (
                 <div className="assess-step active" data-step="4">
-                  <h3 className="section-title"><span className="sec-icon">🐾</span> IV. Intraspecific Dynamics (Dog-to-Dog)</h3>
+                  <h3 className="section-title"><span className="sec-icon"><img src="/icons/paw.png" alt="" /></span> IV. Intraspecific Dynamics (Dog-to-Dog)</h3>
 
                   <h4 className="sub-title">A. Social Orientation</h4>
                   <div className="option-list">
@@ -401,7 +400,7 @@ function AssessmentPageInner() {
                     <button type="submit" className="btn btn-primary">Save &amp; Publish to Animal Profile</button>
                   </div>
 
-                  {saved && <p className="save-confirm no-print">✅ Assessment saved and published to the animal&apos;s profile.</p>}
+                  {saved && <p className="save-confirm no-print"><img src="/icons/check-clock.png" alt="" className="icon-img-sm" /> Assessment saved and published to the animal&apos;s profile.</p>}
                 </div>
               )}
             </form>

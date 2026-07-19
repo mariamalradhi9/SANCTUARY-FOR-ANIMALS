@@ -212,7 +212,7 @@ export default function AnimalFormModal({ open, animal, onClose, onSave }: {
         <div className="field">
           <label>Photo</label>
           <div className="profile-photo-field">
-            <div className="profile-photo-preview">{form.img ? <img src={form.img} alt="Preview" /> : "🐾"}</div>
+            <div className="profile-photo-preview">{form.img ? <img src={form.img} alt="Preview" /> : <img src="/icons/paw.png" alt="" />}</div>
             <div>
               <label htmlFor="animalImgInput" className="btn btn-outline btn-sm">Upload Photo</label>
               <input type="file" id="animalImgInput" accept="image/*" style={{ display: "none" }} onChange={handlePhotoUpload} />
@@ -312,7 +312,7 @@ export default function AnimalFormModal({ open, animal, onClose, onSave }: {
           <p className="hint">Flags this animal on the Admin Dashboard once this date has passed.</p>
         </div>
 
-        <h4 className="sub-title">🏠 Kennel Assignment</h4>
+        <h4 className="sub-title"><img src="/icons/kennel.png" alt="" className="icon-img-sm" /> Kennel Assignment</h4>
         <div className="row-2">
           <div className="field">
             <label htmlFor="animalKennelNumber">Kennel / Shelter Number</label>
@@ -324,7 +324,7 @@ export default function AnimalFormModal({ open, animal, onClose, onSave }: {
           </div>
         </div>
 
-        <h4 className="sub-title">🎓 Training</h4>
+        <h4 className="sub-title"><img src="/icons/training.png" alt="" className="icon-img-sm" /> Training</h4>
         <div className="field">
           <label>Received Training from AASA</label>
           <div className="choice-group">
@@ -384,7 +384,7 @@ export default function AnimalFormModal({ open, animal, onClose, onSave }: {
           )}
         </div>
 
-        <h4 className="sub-title">👤 Adopter Details</h4>
+        <h4 className="sub-title"><img src="/icons/user.png" alt="" className="icon-img-sm" /> Adopter Details</h4>
         <div className="row-2">
           <div className="field">
             <label htmlFor="animalAdopterName">Name</label>

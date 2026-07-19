@@ -90,9 +90,9 @@ export default function BookingWidget({ pet }: { pet: Animal }) {
             <p>Reserve a time slot to take {pet.name} for a walk, a play session, or a grooming visit at the sanctuary.</p>
 
             <div className="activity-choice">
-              <button type="button" className={`activity-btn${activity === "walk" ? " active" : ""}`} onClick={() => setActivity("walk")}><span>🚶</span> Walk</button>
+              <button type="button" className={`activity-btn${activity === "walk" ? " active" : ""}`} onClick={() => setActivity("walk")}><span><img src="/icons/walk.png" alt="" /></span> Walk</button>
               <button type="button" className={`activity-btn${activity === "play" ? " active" : ""}`} onClick={() => setActivity("play")}><span>🎾</span> Playtime</button>
-              <button type="button" className={`activity-btn${activity === "groom" ? " active" : ""}`} onClick={() => setActivity("groom")}><span>🛁</span> Groom</button>
+              <button type="button" className={`activity-btn${activity === "groom" ? " active" : ""}`} onClick={() => setActivity("groom")}><span><img src="/icons/groom.png" alt="" /></span> Groom</button>
             </div>
 
             <div className="calendar-legend">
@@ -183,7 +183,7 @@ export default function BookingWidget({ pet }: { pet: Animal }) {
 
             {successInfo && (
               <div className="booking-success">
-                ✅ Visit booked! Come by for {successInfo.activityLabel} with <strong>{pet.name}</strong> on{" "}
+                <img src="/icons/check-clock.png" alt="" className="icon-img-sm" /> Visit booked! Come by for {successInfo.activityLabel} with <strong>{pet.name}</strong> on{" "}
                 <strong>{successInfo.dateLabel} at {successInfo.slot}</strong> for <strong>{successInfo.duration}</strong>.
               </div>
             )}

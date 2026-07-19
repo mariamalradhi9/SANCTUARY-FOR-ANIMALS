@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import ActivityLabel from "../ActivityLabel";
 import type { Animal, HistoryEntry } from "@/lib/types";
 import { getApplications, getBookings, latestActivityDate } from "@/lib/records";
 import { badgeClassFor } from "@/lib/format";
 
-const PET_ACTIVITY_LABELS: Record<string, string> = { walk: "🚶 Walk", play: "🎾 Playtime", groom: "🛁 Grooming" };
+const PET_ACTIVITY_LABELS: Record<string, string> = { walk: "Walk", play: "Playtime", groom: "Grooming" };
 
 interface ActivityItem {
-  title: string;
+  title: ReactNode;
   subtitle: string;
   status: string;
   date: string;
@@ -31,7 +33,7 @@ export default function PetActivity({ pet }: { pet: Animal }) {
     const bookings: ActivityItem[] = getBookings()
       .filter((b) => b.petId === pet.id)
       .map((b) => ({
-        title: `${PET_ACTIVITY_LABELS[b.activity] || b.activity} with ${pet.name}`,
+        title: <><ActivityLabel activity={b.activity} text={PET_ACTIVITY_LABELS[b.activity] || b.activity} /> with {pet.name}</>,
         subtitle: `${b.name} · ${b.date} at ${b.slot}${b.duration ? " · " + b.duration : ""}`,
         status: b.status,
         date: b.date,

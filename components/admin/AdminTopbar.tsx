@@ -35,7 +35,7 @@ export default function AdminTopbar({ active, noPrint = false }: { active?: Admi
             router.push("/login");
           }}
         >
-          🚪 Logout
+          <img src="/icons/logout.png" alt="" className="btn-icon" /> Logout
         </button>
       </div>
     </header>

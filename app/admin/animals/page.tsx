@@ -12,9 +12,7 @@ import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Animal, Species } from "@/lib/types";
 
-const NO_PHOTO_IMG = "data:image/svg+xml;utf8," + encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150"><rect width="200" height="150" fill="#f7ead8"/><text x="100" y="82" font-size="48" text-anchor="middle">🐾</text></svg>'
-);
+const NO_PHOTO_IMG = "/icons/paw.png";
 
 type AvailFilter = "" | "available" | "unavailable";
 

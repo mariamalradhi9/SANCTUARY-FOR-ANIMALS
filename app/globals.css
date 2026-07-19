@@ -124,6 +124,14 @@ section { padding: 64px 0; }
 .btn-block { width: 100%; }
 .btn-sm { padding: 8px 18px; font-size: 0.85rem; }
 
+.btn-icon { width: 15px; height: 15px; vertical-align: -2px; margin-right: 2px; }
+
+/* Inline icon images that replace emoji, sized relative to their text context. */
+.icon-img-sm { width: 16px; height: 16px; vertical-align: -3px; margin-right: 2px; }
+.icon-img-md { width: 20px; height: 20px; vertical-align: -4px; margin-right: 2px; }
+.icon-img-lg { width: 26px; height: 26px; vertical-align: -5px; }
+.icon-img-avatar { width: 60%; height: 60%; object-fit: contain; opacity: 0.6; }
+
 /* ---------------------------------- Header ---------------------------------- */
 
 .site-header {
@@ -220,6 +228,7 @@ section { padding: 64px 0; }
   cursor: pointer;
   border: none;
 }
+.icon-btn img { width: 18px; height: 18px; }
 .icon-btn .badge {
   position: absolute;
   top: -4px;
@@ -308,6 +317,7 @@ section { padding: 64px 0; }
   justify-content: center;
 }
 .pet-card .fav-btn.active { color: var(--color-danger); }
+.fav-btn img { width: 1em; height: 1em; }
 .pet-card .tag {
   position: absolute;
   top: 12px;
@@ -488,6 +498,7 @@ textarea { resize: vertical; min-height: 100px; }
   font-size: 0.85rem;
 }
 .fact-icon { font-size: 1.4rem; }
+.fact-icon img { width: 24px; height: 24px; }
 
 .behavioral-profile { margin: 24px 0; }
 .behavioral-profile h3 { margin-bottom: 12px; }
@@ -552,6 +563,7 @@ textarea { resize: vertical; min-height: 100px; }
   color: var(--color-text-muted);
 }
 .activity-btn span { font-size: 1.1rem; }
+.activity-btn span img { width: 18px; height: 18px; }
 .activity-btn.active { border-color: var(--color-primary); background: #fdf1e7; color: var(--color-primary); }
 
 .calendar-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.8rem; color: var(--color-text-muted); }
@@ -681,6 +693,7 @@ textarea { resize: vertical; min-height: 100px; }
   box-shadow: var(--shadow-sm);
   transition: background 0.2s, border-color 0.2s, transform 0.2s;
 }
+.step-num img { width: 26px; height: 26px; }
 .step-label { white-space: nowrap; }
 .step-line {
   flex: 1;
@@ -794,6 +807,7 @@ textarea { resize: vertical; min-height: 100px; }
 .tips-card ul { display: flex; flex-direction: column; gap: 14px; }
 .tips-card li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; color: var(--color-text-muted); }
 .tip-icon { font-size: 1.1rem; flex-shrink: 0; }
+.tip-icon img { width: 18px; height: 18px; }
 
 @media (max-width: 860px) {
   .adopt-layout { grid-template-columns: 1fr; }
@@ -959,6 +973,7 @@ textarea { resize: vertical; min-height: 100px; }
   font-size: 1.2rem;
   flex-shrink: 0;
 }
+.message-avatar img { width: 22px; height: 22px; }
 .message-date { font-size: 0.78rem; color: var(--color-text-muted); }
 
 @media (max-width: 860px) {
@@ -1166,6 +1181,7 @@ textarea { resize: vertical; min-height: 100px; }
 }
 .section-title:first-child { margin-top: 0; }
 .sec-icon { font-size: 1.2rem; }
+.sec-icon img { width: 20px; height: 20px; vertical-align: -3px; }
 .sub-title { margin: 22px 0 10px; font-weight: 700; color: var(--color-secondary-dark); font-size: 0.92rem; }
 
 .profile-table {
@@ -1400,6 +1416,7 @@ textarea { resize: vertical; min-height: 100px; }
   justify-content: center;
   font-size: 1.15rem;
 }
+.admin-stat-icon img { width: 22px; height: 22px; }
 .admin-stat h2 { font-size: 2.2rem; margin-bottom: 12px; }
 .admin-stat a { font-weight: 700; font-size: 0.85rem; color: var(--color-primary); }
 .admin-stat a:hover { text-decoration: underline; }

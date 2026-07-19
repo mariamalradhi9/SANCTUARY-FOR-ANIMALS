@@ -50,7 +50,7 @@ export default function BehavioralDetails({ latest }: { latest: Assessment | nul
 
       {dogToDog.length > 0 && (
         <>
-          <h4 className="sub-title">🐾 Dog-to-Dog Dynamics</h4>
+          <h4 className="sub-title"><img src="/icons/paw.png" alt="" className="icon-img-sm" /> Dog-to-Dog Dynamics</h4>
           <div className="behavior-traits">
             {dogToDog.map(([label, value]) => (
               <div className="behavior-trait" key={label}><span>{label}</span><strong>{value}</strong></div>

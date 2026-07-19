@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 import FavButton from "@/components/site/FavButton";
+import ActivityLabel from "@/components/ActivityLabel";
 import { getAnimals } from "@/lib/animals";
 import { getApplications, getBookings, latestActivityDate } from "@/lib/records";
 import { getFavorites } from "@/lib/favorites";
@@ -19,12 +21,12 @@ import type { HistoryEntry } from "@/lib/types";
 type Tab = "applications" | "saved" | "messages" | "settings";
 type StatusFilter = "all" | "accepted" | "pending" | "rejected";
 
-const ACTIVITY_LABELS: Record<string, string> = { walk: "🚶 Walk", play: "🎾 Playtime", groom: "🛁 Grooming" };
+const ACTIVITY_LABELS: Record<string, string> = { walk: "Walk", play: "Playtime", groom: "Grooming" };
 
 interface ActivityItem {
   type: "application" | "booking";
   date: string;
-  title: string;
+  title: ReactNode;
   subtitle: string;
   status: string;
   history: HistoryEntry[];
@@ -51,7 +53,7 @@ export default function DashboardPage() {
     const bookings: ActivityItem[] = getBookings().map((b) => ({
       type: "booking",
       date: b.date,
-      title: `${ACTIVITY_LABELS[b.activity] || b.activity} with ${b.petName}`,
+      title: <><ActivityLabel activity={b.activity} text={ACTIVITY_LABELS[b.activity] || b.activity} /> with {b.petName}</>,
       subtitle: `${b.date} at ${b.slot}${b.duration ? " · " + b.duration : ""}`,
       status: b.status,
       history: b.history?.length ? b.history : [{ status: b.status, date: b.date }],
@@ -88,19 +90,19 @@ export default function DashboardPage() {
         <div className="container dashboard-grid">
           <aside className="dash-sidebar">
             <div className="dash-profile">
-              <div className="dash-avatar">{profilePhoto ? <img src={profilePhoto} alt="Profile photo" /> : "👤"}</div>
+              <div className="dash-avatar">{profilePhoto ? <img src={profilePhoto} alt="Profile photo" /> : <img src="/icons/user.png" alt="" />}</div>
               <h3>Sarina Adams</h3>
               <p>sarina@example.com</p>
             </div>
             <ul className="dash-nav">
-              <li><a href="#" className={`dash-link${tab === "applications" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("applications"); }}>📄 My Applications</a></li>
-              <li><a href="#" className={`dash-link${tab === "saved" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("saved"); }}>🤍 Saved Pets</a></li>
+              <li><a href="#" className={`dash-link${tab === "applications" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("applications"); }}><img src="/icons/documents.png" alt="" className="icon-img-sm" /> My Applications</a></li>
+              <li><a href="#" className={`dash-link${tab === "saved" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("saved"); }}><img src="/icons/heart.png" alt="" className="icon-img-sm" /> Saved Pets</a></li>
               <li><a href="#" className={`dash-link${tab === "messages" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("messages"); }}>💬 Messages</a></li>
               <li><a href="#" className={`dash-link${tab === "settings" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("settings"); }}>⚙️ Settings</a></li>
             </ul>
             <ul className="dash-nav dash-nav-footer">
               <li>
-                <a href="#" className="dash-link" onClick={(e) => { e.preventDefault(); clearSession(); router.push("/login"); }}>🚪 Logout</a>
+                <a href="#" className="dash-link" onClick={(e) => { e.preventDefault(); clearSession(); router.push("/login"); }}><img src="/icons/logout.png" alt="" className="icon-img-sm" /> Logout</a>
               </li>
             </ul>
           </aside>
@@ -151,7 +153,7 @@ export default function DashboardPage() {
                 <h2>Saved Pets</h2>
                 <div className="grid-3">
                   {savedPets.length === 0 ? (
-                    <p>No saved pets yet. Tap the 🤍 on any pet card to save it here.</p>
+                    <p>No saved pets yet. Tap the <img src="/icons/heart.png" alt="heart" className="icon-img-sm" /> on any pet card to save it here.</p>
                   ) : (
                     savedPets.map((pet) => (
                       <div className="card pet-card" key={pet.id}>
@@ -199,7 +201,7 @@ export default function DashboardPage() {
               <div className="dash-panel active">
                 <h2>Account Settings</h2>
                 <div className="profile-photo-field">
-                  <div className="profile-photo-preview">{profilePhoto ? <img src={profilePhoto} alt="Profile photo" /> : "👤"}</div>
+                  <div className="profile-photo-preview">{profilePhoto ? <img src={profilePhoto} alt="Profile photo" /> : <img src="/icons/user.png" alt="" />}</div>
                   <div>
                     <label htmlFor="profilePhotoInput" className="btn btn-outline btn-sm">Upload Photo</label>
                     <input type="file" id="profilePhotoInput" accept="image/*" style={{ display: "none" }} onChange={handlePhotoUpload} />

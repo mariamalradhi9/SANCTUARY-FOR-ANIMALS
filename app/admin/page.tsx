@@ -5,6 +5,7 @@ import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import BookingActionButtons from "@/components/admin/BookingActionButtons";
+import ActivityLabel from "@/components/ActivityLabel";
 import { getAnimals } from "@/lib/animals";
 import { getBookings } from "@/lib/records";
 import { applyBookingAction, type BookingAction } from "@/lib/admin/bookingActions";
@@ -13,7 +14,7 @@ import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Animal, Booking } from "@/lib/types";
 
-const ACTIVITY_LABELS: Record<string, string> = { walk: "🚶 Walk", play: "🎾 Playtime", groom: "🛁 Groom" };
+const ACTIVITY_LABELS: Record<string, string> = { walk: "Walk", play: "Playtime", groom: "Groom" };
 const AGGRESSION_BADGE: Record<string, string> = { Low: "badge-success", Medium: "badge-warning", High: "badge-danger", Severe: "badge-danger" };
 
 function initials(name: string) {
@@ -57,11 +58,11 @@ export default function AdminDashboardPage() {
       if (a.nextVetCheckDue && isOverdue(a.nextVetCheckDue)) {
         alerts.push({
           key: `${a.id}-vet`,
-          node: <>🚨 MANDATORY VET / NAIL TRIM CHECK OVERDUE for <strong>{a.name}</strong> ({daysSince(a.nextVetCheckDue)} days overdue).</>,
+          node: <><img src="/icons/alarm.png" alt="" className="icon-img-sm" /> MANDATORY VET / NAIL TRIM CHECK OVERDUE for <strong>{a.name}</strong> ({daysSince(a.nextVetCheckDue)} days overdue).</>,
         });
       }
       if (a.medicalStatus === "Critical") {
-        alerts.push({ key: `${a.id}-med`, node: <>🚨 <strong>{a.name}</strong> has a Critical medical status.</> });
+        alerts.push({ key: `${a.id}-med`, node: <><img src="/icons/alarm.png" alt="" className="icon-img-sm" /> <strong>{a.name}</strong> has a Critical medical status.</> });
       }
     });
     return alerts;
@@ -91,22 +92,22 @@ export default function AdminDashboardPage() {
 
             <div className="admin-stats grid-4">
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Total Animals</span><span className="admin-stat-icon">🐾</span></div>
+                <div className="admin-stat-head"><span>Total Animals</span><span className="admin-stat-icon"><img src="/icons/pets.png" alt="" /></span></div>
                 <h2>{totalAnimals}</h2>
                 <Link href="/admin/animals">View all animals →</Link>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Available for Walks</span><span className="admin-stat-icon">🚶</span></div>
+                <div className="admin-stat-head"><span>Available for Walks</span><span className="admin-stat-icon"><img src="/icons/walk.png" alt="" /></span></div>
                 <h2>{availableCount}</h2>
                 <Link href="/admin/animals">View available →</Link>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Pending Bookings</span><span className="admin-stat-icon">📅</span></div>
+                <div className="admin-stat-head"><span>Pending Bookings</span><span className="admin-stat-icon"><img src="/icons/calendar.png" alt="" /></span></div>
                 <h2>{pendingBookings}</h2>
                 <Link href="/admin/bookings">Review requests →</Link>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Completed This Month</span><span className="admin-stat-icon">✅</span></div>
+                <div className="admin-stat-head"><span>Completed This Month</span><span className="admin-stat-icon"><img src="/icons/check-clock.png" alt="" /></span></div>
                 <h2>{completedThisMonth}</h2>
                 <Link href="/admin/reports">View reports →</Link>
               </div>
@@ -115,7 +116,7 @@ export default function AdminDashboardPage() {
             {careAlerts.length > 0 && (
               <div className="admin-card">
                 <div className="admin-card-head">
-                  <h3>🚨 Care Alerts</h3>
+                  <h3><img src="/icons/alarm.png" alt="" className="icon-img-md" /> Care Alerts</h3>
                   <Link href="/admin/reports" className="btn btn-ghost btn-sm">Full report →</Link>
                 </div>
                 <ul className="report-notes">
@@ -128,7 +129,7 @@ export default function AdminDashboardPage() {
 
             <div className="admin-card">
               <div className="admin-card-head">
-                <h3>🏠 Kennel Safety Overview</h3>
+                <h3><img src="/icons/kennel.png" alt="" className="icon-img-md" /> Kennel Safety Overview</h3>
                 <Link href="/admin/animals" className="btn btn-ghost btn-sm">Manage animals →</Link>
               </div>
               <p className="hint" style={{ marginBottom: 14 }}>Every kennel and its animal&apos;s aggression level, at a glance — check this before sending anyone down a corridor.</p>
@@ -184,7 +185,7 @@ export default function AdminDashboardPage() {
                             </div>
                           </td>
                           <td>{b.petName}</td>
-                          <td>{ACTIVITY_LABELS[b.activity] || b.activity}</td>
+                          <td><ActivityLabel activity={b.activity} text={ACTIVITY_LABELS[b.activity] || b.activity} /></td>
                           <td>{formatDate(b.date)}<br /><span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>{b.slot}</span></td>
                           <td>{b.duration || "—"}</td>
                           <td><span className={`badge ${badgeClassFor(b.status)}`}>{b.status}</span></td>

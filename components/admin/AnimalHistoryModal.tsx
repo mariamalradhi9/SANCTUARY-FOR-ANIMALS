@@ -1,11 +1,12 @@
 "use client";
 
 import Modal from "../Modal";
+import ActivityLabel from "../ActivityLabel";
 import { getAnimals } from "@/lib/animals";
 import { getApplications, getBookings } from "@/lib/records";
 import { badgeClassFor, formatDate } from "@/lib/format";
 
-const ACTIVITY_LABELS: Record<string, string> = { walk: "🚶 Walk", play: "🎾 Playtime", groom: "🛁 Groom" };
+const ACTIVITY_LABELS: Record<string, string> = { walk: "Walk", play: "Playtime", groom: "Groom" };
 
 export default function AnimalHistoryModal({ petId, onClose }: { petId: string | null; onClose: () => void }) {
   if (!petId) return null;
@@ -24,7 +25,7 @@ export default function AnimalHistoryModal({ petId, onClose }: { petId: string |
   const events = [
     ...bookings.map((b) => ({
       date: b.date,
-      node: <>{ACTIVITY_LABELS[b.activity] || b.activity} with <strong>{b.name}</strong> ({b.slot}{b.duration ? `, ${b.duration}` : ""})</>,
+      node: <><ActivityLabel activity={b.activity} text={ACTIVITY_LABELS[b.activity] || b.activity} /> with <strong>{b.name}</strong> ({b.slot}{b.duration ? `, ${b.duration}` : ""})</>,
       status: b.status,
     })),
     ...applications.map((a) => ({
@@ -38,10 +39,10 @@ export default function AnimalHistoryModal({ petId, onClose }: { petId: string |
     <Modal title={`${animal.name}'s History`} onClose={onClose}>
       {currentlyOut ? (
         <div className="history-current-banner">
-          📍 Currently with <strong>{currentlyOut.name}</strong> ({ACTIVITY_LABELS[currentlyOut.activity] || currentlyOut.activity}) since {formatDate(currentlyOut.date)}
+          📍 Currently with <strong>{currentlyOut.name}</strong> (<ActivityLabel activity={currentlyOut.activity} text={ACTIVITY_LABELS[currentlyOut.activity] || currentlyOut.activity} />) since {formatDate(currentlyOut.date)}
         </div>
       ) : (
-        <div className="history-current-banner history-current-banner-empty">🏠 {animal.name} is currently at the sanctuary.</div>
+        <div className="history-current-banner history-current-banner-empty"><img src="/icons/kennel.png" alt="" className="icon-img-sm" /> {animal.name} is currently at the sanctuary.</div>
       )}
 
       {events.length === 0 ? (

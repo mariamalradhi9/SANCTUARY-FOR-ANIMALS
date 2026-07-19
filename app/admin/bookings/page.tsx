@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import AuthGuard from "@/components/AuthGuard";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import BookingActionButtons from "@/components/admin/BookingActionButtons";
+import ActivityLabel from "@/components/ActivityLabel";
 import { getBookings } from "@/lib/records";
 import { applyBookingAction, type BookingAction } from "@/lib/admin/bookingActions";
 import { badgeClassFor, formatDate } from "@/lib/format";
@@ -11,7 +12,7 @@ import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Booking } from "@/lib/types";
 
-const ACTIVITY_LABELS: Record<string, string> = { walk: "🚶 Walk", play: "🎾 Playtime", groom: "🛁 Groom" };
+const ACTIVITY_LABELS: Record<string, string> = { walk: "Walk", play: "Playtime", groom: "Groom" };
 
 function initials(name: string) {
   return (name || "?").trim().charAt(0).toUpperCase();
@@ -81,7 +82,7 @@ export default function AdminBookingsPage() {
                             </div>
                           </td>
                           <td>{b.petName}</td>
-                          <td>{ACTIVITY_LABELS[b.activity] || b.activity}</td>
+                          <td><ActivityLabel activity={b.activity} text={ACTIVITY_LABELS[b.activity] || b.activity} /></td>
                           <td>{formatDate(b.date)}<br /><span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>{b.slot}</span></td>
                           <td>{b.duration || "—"}</td>
                           <td><span className={`badge ${badgeClassFor(b.status)}`}>{b.status}</span></td>

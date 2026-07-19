@@ -20,7 +20,7 @@ export default function FavButton({ petId, className = "fav-btn" }: { petId: str
         setActive(toggleFavorite(petId));
       }}
     >
-      🤍
+      <img src="/icons/heart.png" alt="" />
     </button>
   );
 }

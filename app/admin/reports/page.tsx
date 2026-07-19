@@ -5,7 +5,8 @@ import AuthGuard from "@/components/AuthGuard";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import { getAnimals } from "@/lib/animals";
 import { getApplications, getBookings } from "@/lib/records";
-import { getAuditLog, AUDIT_ACTION_LABELS, logAudit } from "@/lib/admin/audit";
+import { getAuditLog, logAudit } from "@/lib/admin/audit";
+import AuditActionLabel from "@/components/admin/AuditActionLabel";
 import { daysSince, formatDate, isOverdue } from "@/lib/format";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
@@ -145,11 +146,11 @@ export default function AdminReportsPage() {
       if (a.nextVetCheckDue && isOverdue(a.nextVetCheckDue)) {
         alerts.push({
           level: "danger", key: `${a.id}-vet`,
-          node: <>🚨 MANDATORY VET / NAIL TRIM CHECK OVERDUE for <strong>{a.name}</strong> — was due {formatDate(a.nextVetCheckDue)} ({daysSince(a.nextVetCheckDue)} days ago).</>,
+          node: <><img src="/icons/alarm.png" alt="" className="icon-img-sm" /> MANDATORY VET / NAIL TRIM CHECK OVERDUE for <strong>{a.name}</strong> — was due {formatDate(a.nextVetCheckDue)} ({daysSince(a.nextVetCheckDue)} days ago).</>,
         });
       }
       if (a.medicalStatus === "Critical") {
-        alerts.push({ level: "danger", key: `${a.id}-med`, node: <>🚨 <strong>{a.name}</strong> has a Critical medical status — needs immediate attention.</> });
+        alerts.push({ level: "danger", key: `${a.id}-med`, node: <><img src="/icons/alarm.png" alt="" className="icon-img-sm" /> <strong>{a.name}</strong> has a Critical medical status — needs immediate attention.</> });
       }
       if ((a.aggressionLevel === "High" || a.aggressionLevel === "Severe") && a.medicalStatus === "Under Treatment") {
         alerts.push({ level: "warning", key: `${a.id}-agg`, node: <>⚠️ <strong>{a.name}</strong> is {a.aggressionLevel.toLowerCase()}-aggression and under treatment — plan a safe multi-person handling protocol.</> });
@@ -183,28 +184,28 @@ export default function AdminReportsPage() {
                   <h1>Reports</h1>
                   <p>A snapshot of adoption and booking activity, computed from current records.</p>
                 </div>
-                <button type="button" className="btn btn-outline" onClick={handleExport}>⬇️ Export Donor / Grant Report (CSV)</button>
+                <button type="button" className="btn btn-outline" onClick={handleExport}><img src="/icons/export.png" alt="" className="btn-icon" /> Export Donor / Grant Report (CSV)</button>
               </div>
             </div>
 
             <div className="admin-stats grid-4">
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Approval Rate</span><span className="admin-stat-icon">✅</span></div>
+                <div className="admin-stat-head"><span>Approval Rate</span><span className="admin-stat-icon"><img src="/icons/check-clock.png" alt="" /></span></div>
                 <h2>{approvalRate.rate}%</h2>
                 <span style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>{approvalRate.sub}</span>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Most Walked Animal</span><span className="admin-stat-icon">🚶</span></div>
+                <div className="admin-stat-head"><span>Most Walked Animal</span><span className="admin-stat-icon"><img src="/icons/walk.png" alt="" /></span></div>
                 <h2>{mostWalked.name}</h2>
                 <span style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>{mostWalked.sub}</span>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Cancellation Rate</span><span className="admin-stat-icon">✕</span></div>
+                <div className="admin-stat-head"><span>Cancellation Rate</span><span className="admin-stat-icon"><img src="/icons/cancelled.png" alt="" /></span></div>
                 <h2>{cancelRate}%</h2>
                 <span style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>of all visit bookings</span>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Total Visitors</span><span className="admin-stat-icon">👥</span></div>
+                <div className="admin-stat-head"><span>Total Visitors</span><span className="admin-stat-icon"><img src="/icons/visitor.png" alt="" /></span></div>
                 <h2>{uniqueVisitors}</h2>
                 <span style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>unique names on file</span>
               </div>
@@ -242,7 +243,7 @@ export default function AdminReportsPage() {
             </div>
 
             <div className="admin-card">
-              <div className="admin-card-head"><h3>🚨 Mandatory Care Alerts</h3></div>
+              <div className="admin-card-head"><h3><img src="/icons/alarm.png" alt="" className="icon-img-md" /> Mandatory Care Alerts</h3></div>
               {careAlerts.length === 0 ? (
                 <p className="admin-empty">No overdue care tasks right now — all animals are up to date.</p>
               ) : (
@@ -253,7 +254,7 @@ export default function AdminReportsPage() {
             </div>
 
             <div className="admin-card">
-              <div className="admin-card-head"><h3>⏳ Length of Stay (LOS)</h3></div>
+              <div className="admin-card-head"><h3><img src="/icons/hourglass.png" alt="" className="icon-img-md" /> Length of Stay (LOS)</h3></div>
               <p className="hint" style={{ marginBottom: 14 }}>Animals in care the longest — flagged in red past 180 days so they don&apos;t get forgotten.</p>
               <div className="table-scroll">
                 {losRows.length === 0 ? (
@@ -269,7 +270,7 @@ export default function AdminReportsPage() {
                           <td><strong>{a.los}</strong> days</td>
                           <td>
                             {a.los > 180 ? (
-                              <span className="badge badge-danger">🚨 Long-term — push for adoption</span>
+                              <span className="badge badge-danger"><img src="/icons/alarm.png" alt="" className="icon-img-sm" /> Long-term — push for adoption</span>
                             ) : (
                               <span className="badge badge-success">On track</span>
                             )}
@@ -283,7 +284,7 @@ export default function AdminReportsPage() {
             </div>
 
             <div className="admin-card">
-              <div className="admin-card-head"><h3>🔒 Audit Trail</h3></div>
+              <div className="admin-card-head"><h3><img src="/icons/lock.png" alt="" className="icon-img-md" /> Audit Trail</h3></div>
               <p className="hint" style={{ marginBottom: 14 }}>Every save, status change and assessment is logged here for inspections and incident review.</p>
               <div className="table-scroll">
                 {auditRows.length === 0 ? (
@@ -295,7 +296,7 @@ export default function AdminReportsPage() {
                       {auditRows.map((entry, i) => (
                         <tr key={i}>
                           <td style={{ whiteSpace: "nowrap" }}>{new Date(entry.at).toLocaleString()}</td>
-                          <td style={{ whiteSpace: "nowrap" }}>{AUDIT_ACTION_LABELS[entry.action] || entry.action}</td>
+                          <td style={{ whiteSpace: "nowrap" }}><AuditActionLabel action={entry.action} /></td>
                           <td>{entry.summary}</td>
                         </tr>
                       ))}

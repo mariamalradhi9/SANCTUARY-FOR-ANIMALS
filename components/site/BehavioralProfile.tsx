@@ -25,7 +25,7 @@ export default function BehavioralProfile({ petId, petName }: { petId: string; p
 
   return (
     <div className="behavioral-profile">
-      <h3>🐾 Behavioral Profile</h3>
+      <h3><img src="/icons/paw.png" alt="" className="icon-img-md" /> Behavioral Profile</h3>
       {latest.disposition && (
         <div className={`disposition-option ${levelClass}`} style={{ cursor: "default" }}>
           <span><strong>{latest.disposition}</strong> — assessed by our sanctuary staff</span>
