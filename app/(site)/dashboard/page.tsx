@@ -27,10 +27,26 @@ const PICKUP_STEPS: OrderStatus[] = ["Processing", "Ready for Pickup", "Picked U
 
 const ACTIVITY_LABELS: Record<string, string> = { walk: "Walk", play: "Playtime", groom: "Grooming" };
 
+const STATUS_MESSAGES: Record<string, string> = {
+  "Pending Review": "We're reviewing your application — we'll be in touch soon.",
+  Approved: "Great news! Your adoption application has been approved.",
+  Declined: "This application wasn't approved this time. Don't give up — browse other pets.",
+  Requested: "Thanks for the request — awaiting confirmation from our team.",
+  Confirmed: "Thank you! Your visit request has been confirmed.",
+  Completed: "This visit is complete. Thanks for stopping by!",
+  Cancelled: "This booking was cancelled.",
+};
+
+function statusMessage(status: string): string {
+  return STATUS_MESSAGES[status] || `Current status: ${status}.`;
+}
+
 interface ActivityItem {
   type: "application" | "booking";
+  petId: string;
   date: string;
   title: ReactNode;
+  icon: ReactNode;
   subtitle: string;
   status: string;
   history: HistoryEntry[];
@@ -52,9 +68,11 @@ export default function DashboardPage() {
   useEffect(() => {
     const applications: ActivityItem[] = getApplications().map((app) => ({
       type: "application",
+      petId: app.petId,
       date: app.date,
       title: `Adoption Application — ${app.petName}`,
-      subtitle: `Applicant: ${app.applicant} · Submitted ${app.date}`,
+      icon: <span aria-hidden>🏡</span>,
+      subtitle: `Applicant: ${app.applicant} · Submitted ${formatDate(app.date)}`,
       status: app.status,
       history: app.history?.length ? app.history : [{ status: app.status, date: app.date }],
       pickupDate: app.pickupDate,
@@ -62,9 +80,11 @@ export default function DashboardPage() {
     }));
     const bookings: ActivityItem[] = getBookings().map((b) => ({
       type: "booking",
+      petId: b.petId,
       date: b.date,
       title: <><ActivityLabel activity={b.activity} text={ACTIVITY_LABELS[b.activity] || b.activity} /> with {b.petName}</>,
-      subtitle: `${b.date} at ${b.slot}${b.duration ? " · " + b.duration : ""}`,
+      icon: <ActivityLabel activity={b.activity} text="" />,
+      subtitle: `${formatDate(b.date)} at ${b.slot}${b.duration ? " · " + b.duration : ""}`,
       status: b.status,
       history: b.history?.length ? b.history : [{ status: b.status, date: b.date }],
       arrivalTime: b.arrivalTime,
@@ -82,6 +102,10 @@ export default function DashboardPage() {
 
   const animals = useMemo(() => getAnimals(), []);
   const savedPets = animals.filter((p) => favIds.includes(p.id));
+
+  function photoFor(petId: string) {
+    return animals.find((a) => a.id === petId)?.img;
+  }
 
   function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -102,7 +126,13 @@ export default function DashboardPage() {
         <div className="container dashboard-grid">
           <aside className="dash-sidebar">
             <div className="dash-profile">
-              <div className="dash-avatar">{profilePhoto ? <img src={profilePhoto} alt="Profile photo" /> : <img src="/icons/user.png" alt="" />}</div>
+              <div className="dash-avatar-wrap">
+                <div className="dash-avatar">{profilePhoto ? <img src={profilePhoto} alt="Profile photo" /> : <img src="/icons/user.png" alt="" />}</div>
+                <label htmlFor="sidebarPhotoInput" className="dash-avatar-edit" aria-label="Change profile photo">
+                  <img src="/icons/edit.png" alt="" />
+                </label>
+                <input type="file" id="sidebarPhotoInput" accept="image/*" style={{ display: "none" }} onChange={handlePhotoUpload} />
+              </div>
               <h3>Sarina Adams</h3>
               <p>sarina@example.com</p>
             </div>
@@ -110,7 +140,12 @@ export default function DashboardPage() {
               <li><a href="#" className={`dash-link${tab === "applications" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("applications"); }}><img src="/icons/documents.png" alt="" className="icon-img-sm" /> My Applications</a></li>
               <li><a href="#" className={`dash-link${tab === "orders" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("orders"); }}><img src="/icons/cart.png" alt="" className="icon-img-sm" /> My Orders</a></li>
               <li><a href="#" className={`dash-link${tab === "saved" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("saved"); }}><img src="/icons/heart.png" alt="" className="icon-img-sm" /> Saved Pets</a></li>
-              <li><a href="#" className={`dash-link${tab === "messages" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("messages"); }}><img src="/icons/message.png" alt="" className="icon-img-sm" /> Messages</a></li>
+              <li>
+                <a href="#" className={`dash-link${tab === "messages" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("messages"); }}>
+                  <img src="/icons/message.png" alt="" className="icon-img-sm" /> Messages
+                  <span className="dash-nav-badge">2</span>
+                </a>
+              </li>
               <li><a href="#" className={`dash-link${tab === "settings" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("settings"); }}><img src="/icons/setting.png" alt="" className="icon-img-sm" /> Settings</a></li>
             </ul>
             <ul className="dash-nav dash-nav-footer">
@@ -118,12 +153,22 @@ export default function DashboardPage() {
                 <a href="#" className="dash-link" onClick={(e) => { e.preventDefault(); clearSession(); router.push("/login"); }}><img src="/icons/logout.png" alt="" className="icon-img-sm" /> Logout</a>
               </li>
             </ul>
+            <div className="dash-sidebar-illustration">
+              <p>Every life deserves love <span aria-hidden>❤️</span></p>
+              <span>Thank you for making a difference.</span>
+            </div>
           </aside>
 
           <div className="dash-content">
             {tab === "applications" && (
               <div className="dash-panel active">
-                <h2>My Applications</h2>
+                <div className="dash-panel-header">
+                  <div className="page-banner-icon"><span aria-hidden style={{ fontSize: "1.4rem" }}>🐾</span></div>
+                  <div>
+                    <h2>My Applications</h2>
+                    <p>Track and manage all your applications in one place.</p>
+                  </div>
+                </div>
                 <div className="status-filter-bar">
                   {(["all", "accepted", "pending", "rejected"] as StatusFilter[]).map((f) => (
                     <button
@@ -141,14 +186,17 @@ export default function DashboardPage() {
                     <p>Nothing here yet. <Link href="/search" style={{ color: "var(--color-primary)", fontWeight: 700 }}>Browse available pets →</Link></p>
                   ) : (
                     filteredActivity.map((item, i) => (
-                      <details className="app-row-details" key={i}>
+                      <details className="app-row-details activity-card" key={i}>
                         <summary className="app-row">
-                          <div>
+                          {photoFor(item.petId) && <img className="activity-card-photo" src={photoFor(item.petId)} alt="" />}
+                          <div className="activity-card-icon">{item.icon}</div>
+                          <div className="activity-card-body">
                             <strong>{item.title}</strong>
                             <p style={{ margin: "2px 0 0" }}>{item.subtitle}</p>
                           </div>
                           <span className={`badge ${badgeClassFor(item.status)}`}>{item.status}</span>
                         </summary>
+                        <p className={`status-message ${badgeClassFor(item.status)}`}>{statusMessage(item.status)}</p>
                         {item.pickupDate && item.pickupTime && (
                           <p className="pickup-notice">
                             <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Pickup scheduled for <strong>{formatDate(item.pickupDate)}</strong> at <strong>{formatTime12(item.pickupTime)}</strong>
@@ -175,7 +223,13 @@ export default function DashboardPage() {
 
             {tab === "orders" && (
               <div className="dash-panel active">
-                <h2>My Orders</h2>
+                <div className="dash-panel-header">
+                  <div className="page-banner-icon"><img src="/icons/cart.png" alt="" style={{ width: 22, height: 22 }} /></div>
+                  <div>
+                    <h2>My Orders</h2>
+                    <p>Track your sponsorship orders from placed to delivered.</p>
+                  </div>
+                </div>
                 {orders.length === 0 ? (
                   <p>No sponsorship orders yet. <Link href="/shop" style={{ color: "var(--color-primary)", fontWeight: 700 }}>Visit the shop →</Link></p>
                 ) : (
@@ -192,9 +246,10 @@ export default function DashboardPage() {
                       ...stepList.filter((s) => !reached.has(s)).map((s): TimelineStep => ({ label: s, state: "upcoming" })),
                     ];
                     return (
-                      <details className="app-row-details" key={o.id}>
+                      <details className="app-row-details activity-card" key={o.id}>
                         <summary className="app-row">
-                          <div>
+                          <div className="activity-card-icon"><span aria-hidden>{fulfillment === "pickup" ? "🏬" : "🚚"}</span></div>
+                          <div className="activity-card-body">
                             <strong>Order {o.id}</strong>
                             <p style={{ margin: "2px 0 0" }}>{o.items.map((it) => `${it.name} ×${it.qty}`).join(", ")} · Placed {formatDate(o.date)}</p>
                           </div>
@@ -221,7 +276,13 @@ export default function DashboardPage() {
 
             {tab === "saved" && (
               <div className="dash-panel active">
-                <h2>Saved Pets</h2>
+                <div className="dash-panel-header">
+                  <div className="page-banner-icon"><img src="/icons/heart.png" alt="" style={{ width: 22, height: 22 }} /></div>
+                  <div>
+                    <h2>Saved Pets</h2>
+                    <p>Pets you&apos;ve favorited, all in one place.</p>
+                  </div>
+                </div>
                 <div className="grid-3">
                   {savedPets.length === 0 ? (
                     <p>No saved pets yet. Tap the <img src="/icons/heart.png" alt="heart" className="icon-img-sm" /> on any pet card to save it here.</p>
@@ -246,7 +307,13 @@ export default function DashboardPage() {
 
             {tab === "messages" && (
               <div className="dash-panel active">
-                <h2>Messages</h2>
+                <div className="dash-panel-header">
+                  <div className="page-banner-icon"><img src="/icons/message.png" alt="" style={{ width: 22, height: 22 }} /></div>
+                  <div>
+                    <h2>Messages</h2>
+                    <p>Notes from our team about your applications and visits.</p>
+                  </div>
+                </div>
                 <ul className="message-list">
                   <li className="message-item">
                     <div className="message-avatar">🏡</div>
@@ -270,7 +337,13 @@ export default function DashboardPage() {
 
             {tab === "settings" && (
               <div className="dash-panel active">
-                <h2>Account Settings</h2>
+                <div className="dash-panel-header">
+                  <div className="page-banner-icon"><img src="/icons/setting.png" alt="" style={{ width: 22, height: 22 }} /></div>
+                  <div>
+                    <h2>Account Settings</h2>
+                    <p>Manage your profile and notification preferences.</p>
+                  </div>
+                </div>
                 <div className="profile-photo-field">
                   <div className="profile-photo-preview">{profilePhoto ? <img src={profilePhoto} alt="Profile photo" /> : <img src="/icons/user.png" alt="" />}</div>
                   <div>
@@ -295,6 +368,15 @@ export default function DashboardPage() {
                 <button className="btn btn-primary">Save Changes</button>
               </div>
             )}
+
+            <div className="tip-banner need-help-banner">
+              <div className="tip-banner-icon"><img src="/icons/heart.png" alt="" /></div>
+              <div className="tip-banner-copy">
+                <h4>Need help?</h4>
+                <p>Contact our team if you have any questions about your applications.</p>
+              </div>
+              <a href="mailto:hello@aamalalmoayyed.bh" className="btn btn-outline btn-sm">Contact Support</a>
+            </div>
           </div>
         </div>
       </section>

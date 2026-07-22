@@ -22,11 +22,14 @@ function ApplicantAvatar({ app, size }: { app: Application; size: number }) {
   return <span className="admin-stat-icon" style={{ width: size, height: size, fontSize: "0.9rem" }}>{letter}</span>;
 }
 
+const STATUS_PILLS = ["Pending Review", "Approved", "Declined"] as const;
+
 export default function AdminApplicationsPage() {
   usePageTitle("Adoption Applications — Admin — Aamal Almoayyed Sanctuary");
   const { message, show, showToast } = useToast();
   const [applications, setApplications] = useState<Application[]>([]);
   const [statusFilter, setStatusFilter] = useState("");
+  const [search, setSearch] = useState("");
   const [viewing, setViewing] = useState<Application | null>(null);
   const [approvingId, setApprovingId] = useState<string | null>(null);
 
@@ -68,9 +71,11 @@ export default function AdminApplicationsPage() {
   }
 
   const list = useMemo(() => {
-    const all = statusFilter ? applications.filter((a) => a.status === statusFilter) : applications;
+    let all = statusFilter ? applications.filter((a) => a.status === statusFilter) : applications;
+    const q = search.trim().toLowerCase();
+    if (q) all = all.filter((a) => a.applicant.toLowerCase().includes(q) || a.petName.toLowerCase().includes(q));
     return all.slice().reverse();
-  }, [applications, statusFilter]);
+  }, [applications, statusFilter, search]);
 
   return (
     <AuthGuard>
@@ -81,22 +86,49 @@ export default function AdminApplicationsPage() {
           <div className="container">
             <div className={`admin-toast${show ? " show" : ""}`}>{message}</div>
 
-            <div className="admin-card">
-              <div className="admin-card-head">
+            <div className="admin-card page-banner">
+              <div className="page-banner-copy">
+                <div className="page-banner-icon"><img src="/icons/documents.png" alt="" /></div>
                 <div>
-                  <h3>Adoption Applications</h3>
-                  <p style={{ margin: "4px 0 0" }}>Review incoming adoption requests and update their status.</p>
+                  <h1>Adoption Applications</h1>
+                  <p>Review incoming adoption requests and update their status.</p>
                 </div>
-                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                  <option value="">All statuses</option>
-                  <option value="Pending Review">Pending Review</option>
-                  <option value="Approved">Approved</option>
-                  <option value="Declined">Declined</option>
-                </select>
+              </div>
+              <img className="page-banner-illustration" src="/img/application.png" alt="" />
+              <select className="page-banner-filter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                <option value="">All statuses</option>
+                <option value="Pending Review">Pending Review</option>
+                <option value="Approved">Approved</option>
+                <option value="Declined">Declined</option>
+              </select>
+            </div>
+
+            <div className="admin-card">
+              <div className="pill-filter-bar">
+                <button type="button" className={`pill-filter-btn${statusFilter === "" ? " active" : ""}`} onClick={() => setStatusFilter("")}>
+                  <img src="/icons/documents.png" alt="" /> All
+                </button>
+                {STATUS_PILLS.map((s) => (
+                  <button
+                    type="button"
+                    key={s}
+                    className={`pill-filter-btn${statusFilter === s ? " active" : ""}`}
+                    onClick={() => setStatusFilter(s)}
+                  >
+                    {s}
+                  </button>
+                ))}
+                <input
+                  type="text"
+                  className="pill-filter-search"
+                  placeholder="Search applications…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
               </div>
 
               {list.length === 0 ? (
-                <p className="admin-empty">No adoption applications {statusFilter ? "with this status " : ""}yet.</p>
+                <p className="admin-empty">No adoption applications match your filters.</p>
               ) : (
                 <div className="table-scroll">
                   <table className="admin-table">
@@ -125,8 +157,8 @@ export default function AdminApplicationsPage() {
                             <td><span className={`badge ${badgeClassFor(a.status)}`}>{a.status}</span></td>
                             <td>
                               <div className="row-actions">
+                                <button type="button" className="pill-btn" onClick={() => setViewing(a)}><img src="/icons/documents.png" alt="" className="icon-img-sm" /> View Details</button>
                                 <ApplicationActionButtons status={a.status} onAction={(action) => handleAction(a.id, action)} />
-                                <button type="button" className="ghost-btn" onClick={() => setViewing(a)}>View</button>
                               </div>
                             </td>
                           </tr>
@@ -136,6 +168,14 @@ export default function AdminApplicationsPage() {
                   </table>
                 </div>
               )}
+            </div>
+
+            <div className="admin-card tip-banner">
+              <div className="tip-banner-icon"><img src="/icons/heart.png" alt="" /></div>
+              <div className="tip-banner-copy">
+                <h4>Quick Tip</h4>
+                <p>Review applications promptly and schedule pickups as soon as you approve — adopters are waiting to bring their new companion home.</p>
+              </div>
             </div>
           </div>
         </main>

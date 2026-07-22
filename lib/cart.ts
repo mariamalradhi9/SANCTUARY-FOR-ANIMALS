@@ -36,13 +36,13 @@ export function saveCart(cart: CartItem[]): void {
   writeJSON("pp_cart", cart);
 }
 
-export function addToCart(productId: string): CartItem[] {
+export function addToCart(productId: string, qty: number = 1): CartItem[] {
   const product = PRODUCTS.find((p) => p.id === productId);
   if (!product) return getCart();
   const cart = getCart();
   const existing = cart.find((item) => item.id === productId);
-  if (existing) existing.qty += 1;
-  else cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
+  if (existing) existing.qty += qty;
+  else cart.push({ id: product.id, name: product.name, price: product.price, qty });
   saveCart(cart);
   return cart;
 }
