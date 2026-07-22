@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import ScoreScale from "@/components/admin/ScoreScale";
-import { getAnimals, updateAnimal } from "@/lib/animals";
+import { getAnimals,updateAnimal  } from "@/lib/animals";
 import { getLatestAssessment, saveAssessment } from "@/lib/records";
 import { logAudit } from "@/lib/admin/audit";
 import { ageLabel, formatDate } from "@/lib/format";
@@ -166,16 +166,13 @@ setForm({
     const data: Assessment = {
       petId,
       ...form,
-      dob: form.dob,
+dob: form.dob,
       savedAt: new Date().toISOString(),
     };
     saveAssessment(data);
-    
-    // تحديث حقل dob في Animal record إذا كان موجوداً ومختلفاً
-    if (form.dob && selectedAnimal?.dob !== form.dob) {
-      updateAnimal(petId, { dob: form.dob });
-    }
-    
+    updateAnimal(petId, {
+  dob: form.dob,
+});
     const isUpdate = !!getLatestAssessment(petId);
     logAudit("assessment-saved", `Behavioral assessment for ${data.dogName || "an animal"} was ${isUpdate ? "updated" : "recorded"} (disposition: ${data.disposition || "not set"}).`);
 
