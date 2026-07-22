@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import AuthGuard from "@/components/AuthGuard";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import BookingActionButtons from "@/components/admin/BookingActionButtons";
+import ArrivalTimeModal from "@/components/admin/ArrivalTimeModal";
 import ActivityLabel from "@/components/ActivityLabel";
 import { getBookings } from "@/lib/records";
 import { applyBookingAction, setBookingArrivalTime, type BookingAction } from "@/lib/admin/bookingActions";
@@ -23,27 +24,47 @@ export default function AdminBookingsPage() {
   const { message, show, showToast } = useToast();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [statusFilter, setStatusFilter] = useState("");
-  const [arrivalDrafts, setArrivalDrafts] = useState<Record<string, string>>({});
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
+  const [editingArrivalId, setEditingArrivalId] = useState<string | null>(null);
 
   useEffect(() => {
     setBookings(getBookings());
   }, []);
 
   function handleAction(id: string, action: BookingAction) {
+    if (action === "confirm") {
+      setConfirmingId(id);
+      return;
+    }
     const b = applyBookingAction(id, action);
     if (!b) return;
     setBookings(getBookings());
     showToast(`Booking for ${b.petName} marked as "${b.status}".`);
   }
 
-  function handleSaveArrival(id: string) {
-    const value = arrivalDrafts[id];
-    if (!value) return;
-    const b = setBookingArrivalTime(id, value);
-    if (!b) return;
-    setBookings(getBookings());
-    showToast(`Arrival time for ${b.petName}'s visit set to ${value}.`);
+  function handleConfirmWithArrival(time: string) {
+    if (!confirmingId) return;
+    const b = applyBookingAction(confirmingId, "confirm");
+    if (b) {
+      setBookingArrivalTime(confirmingId, time);
+      setBookings(getBookings());
+      showToast(`Booking for ${b.petName} confirmed — arrive by ${time}.`);
+    }
+    setConfirmingId(null);
   }
+
+  function handleUpdateArrival(time: string) {
+    if (!editingArrivalId) return;
+    const b = setBookingArrivalTime(editingArrivalId, time);
+    if (b) {
+      setBookings(getBookings());
+      showToast(`Arrival time for ${b.petName}'s visit set to ${time}.`);
+    }
+    setEditingArrivalId(null);
+  }
+
+  const confirmingBooking = useMemo(() => bookings.find((b) => b.id === confirmingId) || null, [bookings, confirmingId]);
+  const editingArrivalBooking = useMemo(() => bookings.find((b) => b.id === editingArrivalId) || null, [bookings, editingArrivalId]);
 
   const list = useMemo(() => {
     const all = statusFilter ? bookings.filter((b) => b.status === statusFilter) : bookings;
@@ -95,24 +116,15 @@ export default function AdminBookingsPage() {
                           <td><ActivityLabel activity={b.activity} text={ACTIVITY_LABELS[b.activity] || b.activity} /></td>
                           <td>{formatDate(b.date)}<br /><span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>{b.slot}</span></td>
                           <td>
-                            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                              <input
-                                type="time"
-                                value={arrivalDrafts[b.id] ?? b.arrivalTime ?? ""}
-                                onChange={(e) => setArrivalDrafts((prev) => ({ ...prev, [b.id]: e.target.value }))}
-                                style={{ width: 110 }}
-                              />
-                              <button
-                                type="button"
-                                className="btn btn-ghost btn-sm"
-                                disabled={!arrivalDrafts[b.id] || arrivalDrafts[b.id] === b.arrivalTime}
-                                onClick={() => handleSaveArrival(b.id)}
-                              >
-                                Save
-                              </button>
-                            </div>
-                            {b.arrivalTime && (
-                              <span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>Arrive by {b.arrivalTime}</span>
+                            {b.arrivalTime ? (
+                              <div>
+                                <span>Arrive by {b.arrivalTime}</span><br />
+                                <button type="button" className="btn btn-ghost btn-sm" style={{ padding: "2px 8px" }} onClick={() => setEditingArrivalId(b.id)}>Edit</button>
+                              </div>
+                            ) : b.status === "Requested" ? (
+                              <span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>Set on confirm</span>
+                            ) : (
+                              <button type="button" className="btn btn-outline btn-sm" onClick={() => setEditingArrivalId(b.id)}>Set Arrival</button>
                             )}
                           </td>
                           <td>{b.duration || "—"}</td>
@@ -132,6 +144,22 @@ export default function AdminBookingsPage() {
           </div>
         </main>
       </div>
+
+      <ArrivalTimeModal
+        open={!!confirmingBooking}
+        petName={confirmingBooking?.petName || ""}
+        confirmLabel="Confirm Booking"
+        onConfirm={handleConfirmWithArrival}
+        onCancel={() => setConfirmingId(null)}
+      />
+      <ArrivalTimeModal
+        open={!!editingArrivalBooking}
+        petName={editingArrivalBooking?.petName || ""}
+        initialTime={editingArrivalBooking?.arrivalTime}
+        confirmLabel="Save"
+        onConfirm={handleUpdateArrival}
+        onCancel={() => setEditingArrivalId(null)}
+      />
     </AuthGuard>
   );
 }

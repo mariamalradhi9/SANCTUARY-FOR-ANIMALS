@@ -5,6 +5,7 @@ import AuthGuard from "@/components/AuthGuard";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import ApplicationActionButtons from "@/components/admin/ApplicationActionButtons";
 import ApplicationDetailModal from "@/components/admin/ApplicationDetailModal";
+import SchedulePickupModal from "@/components/admin/SchedulePickupModal";
 import { getAnimals } from "@/lib/animals";
 import { getApplications } from "@/lib/records";
 import { applyApplicationAction, scheduleApplicationPickup, type ApplicationAction } from "@/lib/admin/bookingActions";
@@ -27,18 +28,35 @@ export default function AdminApplicationsPage() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [statusFilter, setStatusFilter] = useState("");
   const [viewing, setViewing] = useState<Application | null>(null);
+  const [approvingId, setApprovingId] = useState<string | null>(null);
 
   useEffect(() => {
     setApplications(getApplications());
   }, []);
 
   const animals = useMemo(() => getAnimals(), []);
+  const approvingApp = useMemo(() => applications.find((a) => a.id === approvingId) || null, [applications, approvingId]);
 
   function handleAction(id: string, action: ApplicationAction) {
+    if (action === "approve") {
+      setApprovingId(id);
+      return;
+    }
     const a = applyApplicationAction(id, action);
     if (!a) return;
     setApplications(getApplications());
     showToast(`Application for ${a.petName} marked as "${a.status}".`);
+  }
+
+  function handleConfirmApproval(pickupDate: string, pickupTime: string) {
+    if (!approvingId) return;
+    const a = applyApplicationAction(approvingId, "approve");
+    if (a) {
+      scheduleApplicationPickup(approvingId, pickupDate, pickupTime);
+      setApplications(getApplications());
+      showToast(`Application for ${a.petName} approved — pickup scheduled for ${pickupDate} at ${pickupTime}.`);
+    }
+    setApprovingId(null);
   }
 
   function handleSchedulePickup(id: string, pickupDate: string, pickupTime: string) {
@@ -124,6 +142,13 @@ export default function AdminApplicationsPage() {
       </div>
 
       <ApplicationDetailModal application={viewing} onClose={() => setViewing(null)} onSchedulePickup={handleSchedulePickup} />
+      <SchedulePickupModal
+        open={!!approvingApp}
+        petName={approvingApp?.petName || ""}
+        confirmLabel="Confirm Approval"
+        onConfirm={handleConfirmApproval}
+        onCancel={() => setApprovingId(null)}
+      />
     </AuthGuard>
   );
 }

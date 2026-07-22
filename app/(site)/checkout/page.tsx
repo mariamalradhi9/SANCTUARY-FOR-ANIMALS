@@ -10,14 +10,16 @@ import { getCart, saveCart, cartTotal } from "@/lib/cart";
 import { getOrders, saveOrders } from "@/lib/records";
 import { formatBHD } from "@/lib/format";
 import { usePageTitle } from "@/lib/usePageTitle";
-import type { CartItem, Order } from "@/lib/types";
+import type { CartItem, FulfillmentMethod, Order } from "@/lib/types";
 
 export default function CheckoutPage() {
   usePageTitle("Checkout — Aamal Almoayyed Sanctuary");
   const router = useRouter();
   const [cart, setCart] = useState<CartItem[] | null>(null);
+  const [fulfillment, setFulfillment] = useState<FulfillmentMethod>("delivery");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [card, setCard] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
@@ -40,6 +42,10 @@ export default function CheckoutPage() {
       alert("Please fill in all fields to confirm your sponsorship.");
       return;
     }
+    if (fulfillment === "delivery" && !address.trim()) {
+      alert("Please enter a delivery address.");
+      return;
+    }
 
     const num = "AAM-" + Date.now().toString().slice(-6);
     const today = new Date().toISOString().slice(0, 10);
@@ -49,7 +55,9 @@ export default function CheckoutPage() {
       total: cartTotal(cart),
       name: name.trim(),
       phone: phone.trim(),
+      address: fulfillment === "delivery" ? address.trim() : undefined,
       date: today,
+      fulfillment,
       status: "Processing",
       history: [{ status: "Processing", date: today }],
     };
@@ -70,17 +78,44 @@ export default function CheckoutPage() {
           <div className="section-head" style={{ textAlign: "left", margin: "0 0 32px" }}>
             <span className="eyebrow">Secure Sponsorship</span>
             <h1>Complete Your Sponsorship</h1>
-            <p>These supplies stay at the sanctuary — our team will use them to feed and care for the animals in our shelter.</p>
+            <p>
+              {fulfillment === "delivery"
+                ? "We'll deliver these supplies to your address for you to pass along, or have them sent straight to the sanctuary."
+                : "These supplies stay at the sanctuary — swing by during our pickup window and our team will hand them over."}
+            </p>
           </div>
 
           {!orderNumber && (
             <div className="checkout-layout">
               <div className="checkout-form-card">
+                <h3>Fulfillment Method</h3>
+                <div className="fulfillment-choice">
+                  <label className={`fulfillment-option${fulfillment === "delivery" ? " active" : ""}`}>
+                    <input type="radio" name="fulfillment" checked={fulfillment === "delivery"} onChange={() => setFulfillment("delivery")} />
+                    <span className="fulfillment-icon">🚚</span>
+                    <span>
+                      Delivery<br />
+                      <small>Sent to your address.</small>
+                    </span>
+                  </label>
+                  <label className={`fulfillment-option${fulfillment === "pickup" ? " active" : ""}`}>
+                    <input type="radio" name="fulfillment" checked={fulfillment === "pickup"} onChange={() => setFulfillment("pickup")} />
+                    <span className="fulfillment-icon">🏬</span>
+                    <span>
+                      Pickup<br />
+                      <small>Collect at the sanctuary.</small>
+                    </span>
+                  </label>
+                </div>
+
                 <h3>Donor Details</h3>
                 <div className="row-2">
                   <div className="field"><label htmlFor="coName">Full Name *</label><input type="text" id="coName" required value={name} onChange={(e) => setName(e.target.value)} /></div>
                   <div className="field"><label htmlFor="coPhone">Phone *</label><input type="tel" id="coPhone" required value={phone} onChange={(e) => setPhone(e.target.value)} /></div>
                 </div>
+                {fulfillment === "delivery" && (
+                  <div className="field"><label htmlFor="coAddress">Delivery Address *</label><input type="text" id="coAddress" required value={address} onChange={(e) => setAddress(e.target.value)} /></div>
+                )}
 
                 <h3>Payment Details</h3>
                 <div className="field"><label htmlFor="coCard">Card Number *</label><input type="text" id="coCard" placeholder="1234 5678 9012 3456" maxLength={19} required value={card} onChange={(e) => setCard(e.target.value)} /></div>
@@ -112,7 +147,12 @@ export default function CheckoutPage() {
             <div className="form-card success-box">
               <div className="success-icon">🎉</div>
               <h2>Thank You for Your Sponsorship!</h2>
-              <p>Sponsorship #{orderNumber} confirmed. Our team will use these supplies to care for the animals at the sanctuary.</p>
+              <p>
+                Sponsorship #{orderNumber} confirmed.{" "}
+                {fulfillment === "delivery"
+                  ? "We'll deliver your order and keep you posted on the way."
+                  : "We'll let you know as soon as it's ready for pickup at the sanctuary."}
+              </p>
               <a href="/shop" className="btn btn-primary">Sponsor More Supplies</a>
             </div>
           )}

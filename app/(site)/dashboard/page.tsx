@@ -9,6 +9,7 @@ import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 import FavButton from "@/components/site/FavButton";
 import ActivityLabel from "@/components/ActivityLabel";
+import TrackingTimeline, { type TimelineStep } from "@/components/TrackingTimeline";
 import { getAnimals } from "@/lib/animals";
 import { getApplications, getBookings, getOrders, latestActivityDate } from "@/lib/records";
 import { getFavorites } from "@/lib/favorites";
@@ -21,7 +22,8 @@ import type { HistoryEntry, Order, OrderStatus } from "@/lib/types";
 type Tab = "applications" | "orders" | "saved" | "messages" | "settings";
 type StatusFilter = "all" | "accepted" | "pending" | "rejected";
 
-const ORDER_STEPS: OrderStatus[] = ["Processing", "Shipped", "Out for Delivery", "Delivered"];
+const DELIVERY_STEPS: OrderStatus[] = ["Processing", "Shipped", "Out for Delivery", "Delivered"];
+const PICKUP_STEPS: OrderStatus[] = ["Processing", "Ready for Pickup", "Picked Up"];
 
 const ACTIVITY_LABELS: Record<string, string> = { walk: "Walk", play: "Playtime", groom: "Grooming" };
 
@@ -157,11 +159,13 @@ export default function DashboardPage() {
                             <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Please arrive by <strong>{item.arrivalTime}</strong>
                           </p>
                         )}
-                        <ul className="activity-timeline">
-                          {item.history.map((h, j) => (
-                            <li key={j}><span className={`badge ${badgeClassFor(h.status)}`}>{h.status}</span> <span className="activity-timeline-date">{h.date}</span></li>
-                          ))}
-                        </ul>
+                        <TrackingTimeline
+                          steps={item.history.map((h, j): TimelineStep => ({
+                            label: h.status,
+                            date: formatDate(h.date),
+                            state: j === item.history.length - 1 ? "current" : "done",
+                          }))}
+                        />
                       </details>
                     ))
                   )}
@@ -176,7 +180,17 @@ export default function DashboardPage() {
                   <p>No sponsorship orders yet. <Link href="/shop" style={{ color: "var(--color-primary)", fontWeight: 700 }}>Visit the shop →</Link></p>
                 ) : (
                   orders.map((o) => {
-                    const stepIdx = ORDER_STEPS.indexOf(o.status);
+                    const fulfillment = o.fulfillment || "delivery";
+                    const stepList = fulfillment === "pickup" ? PICKUP_STEPS : DELIVERY_STEPS;
+                    const reached = new Set(o.history.map((h) => h.status));
+                    const steps: TimelineStep[] = [
+                      ...o.history.map((h, j): TimelineStep => ({
+                        label: h.status,
+                        date: formatDate(h.date),
+                        state: j === o.history.length - 1 ? "current" : "done",
+                      })),
+                      ...stepList.filter((s) => !reached.has(s)).map((s): TimelineStep => ({ label: s, state: "upcoming" })),
+                    ];
                     return (
                       <details className="app-row-details" key={o.id}>
                         <summary className="app-row">
@@ -186,14 +200,17 @@ export default function DashboardPage() {
                           </div>
                           <span className={`badge ${badgeClassFor(o.status)}`}>{o.status}</span>
                         </summary>
-                        <div className="order-track">
-                          {ORDER_STEPS.map((s, i) => (
-                            <div className={`order-track-step${i <= stepIdx ? " done" : ""}`} key={s}>
-                              <span className="order-track-dot" />
-                              <span>{s}</span>
-                            </div>
-                          ))}
-                        </div>
+                        {fulfillment === "pickup" && o.pickupWindowStart && o.pickupWindowEnd && (
+                          <p className="pickup-notice">
+                            <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Ready for pickup between <strong>{o.pickupWindowStart}</strong> and <strong>{o.pickupWindowEnd}</strong>
+                          </p>
+                        )}
+                        {fulfillment === "delivery" && o.address && (
+                          <p className="pickup-notice">
+                            <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Delivering to <strong>{o.address}</strong>
+                          </p>
+                        )}
+                        <TrackingTimeline steps={steps} />
                         <p style={{ margin: "10px 0 0", fontWeight: 700 }}>Total: {formatBHD(o.total)}</p>
                       </details>
                     );

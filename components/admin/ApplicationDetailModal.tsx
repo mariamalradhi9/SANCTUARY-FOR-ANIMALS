@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Modal from "../Modal";
 import AnimalViewModal from "./AnimalViewModal";
+import SchedulePickupModal from "./SchedulePickupModal";
 import { getAnimals } from "@/lib/animals";
 import { badgeClassFor, formatDate } from "@/lib/format";
 import type { Application } from "@/lib/types";
@@ -41,21 +42,10 @@ export default function ApplicationDetailModal({
   onSchedulePickup?: (id: string, pickupDate: string, pickupTime: string) => void;
 }) {
   const [viewingAnimal, setViewingAnimal] = useState(false);
-  const [pickupDate, setPickupDate] = useState(application?.pickupDate || "");
-  const [pickupTime, setPickupTime] = useState(application?.pickupTime || "");
-
-  useEffect(() => {
-    setPickupDate(application?.pickupDate || "");
-    setPickupTime(application?.pickupTime || "");
-  }, [application?.id, application?.pickupDate, application?.pickupTime]);
+  const [scheduling, setScheduling] = useState(false);
 
   if (!application) return null;
   const animal = getAnimals().find((p) => p.id === application.petId);
-
-  function savePickup() {
-    if (!application || !pickupDate || !pickupTime) return;
-    onSchedulePickup?.(application.id, pickupDate, pickupTime);
-  }
 
   return (
     <Modal title="Application Details" onClose={onClose}>
@@ -97,31 +87,39 @@ export default function ApplicationDetailModal({
         ["Submitted", formatDate(application.date)],
       ]} />
 
-      {onSchedulePickup && (
+      {onSchedulePickup && application.status === "Approved" && (
         <div className="app-detail-group">
-          <h4>📅 Schedule Pickup</h4>
-          <div className="summary-box" style={{ display: "flex", gap: 10, alignItems: "flex-end", flexWrap: "wrap", padding: 14 }}>
-            <div className="field" style={{ margin: 0 }}>
-              <label htmlFor="pickupDate">Date</label>
-              <input id="pickupDate" type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} />
-            </div>
-            <div className="field" style={{ margin: 0 }}>
-              <label htmlFor="pickupTime">Time</label>
-              <input id="pickupTime" type="time" value={pickupTime} onChange={(e) => setPickupTime(e.target.value)} />
-            </div>
-            <button type="button" className="btn btn-primary btn-sm" onClick={savePickup} disabled={!pickupDate || !pickupTime}>
-              Save
-            </button>
+          <h4>📅 Pickup</h4>
+          <div className="summary-box" style={{ padding: 14 }}>
+            {application.pickupDate && application.pickupTime ? (
+              <div className="summary-row">
+                <span>Scheduled for</span>
+                <strong>{formatDate(application.pickupDate)} at {application.pickupTime}</strong>
+              </div>
+            ) : (
+              <div className="summary-row">
+                <span>No pickup scheduled yet</span>
+                <strong>—</strong>
+              </div>
+            )}
           </div>
-          {application.pickupDate && application.pickupTime && (
-            <p className="hint" style={{ marginTop: 8 }}>
-              Currently scheduled: {formatDate(application.pickupDate)} at {application.pickupTime}
-            </p>
-          )}
+          <button type="button" className="btn btn-outline btn-sm" style={{ marginTop: 10 }} onClick={() => setScheduling(true)}>
+            {application.pickupDate ? "Reschedule Pickup" : "Schedule Pickup"}
+          </button>
         </div>
       )}
 
       {animal && <AnimalViewModal animal={viewingAnimal ? animal : null} onClose={() => setViewingAnimal(false)} />}
+      {onSchedulePickup && (
+        <SchedulePickupModal
+          open={scheduling}
+          petName={application.petName}
+          initialDate={application.pickupDate}
+          initialTime={application.pickupTime}
+          onConfirm={(d, t) => { onSchedulePickup(application.id, d, t); setScheduling(false); }}
+          onCancel={() => setScheduling(false)}
+        />
+      )}
     </Modal>
   );
 }

@@ -34,6 +34,19 @@ export function setOrderStatus(id: string, status: OrderStatus): Order | null {
   return o;
 }
 
+export function readyOrderForPickup(id: string, windowStart: string, windowEnd: string): Order | null {
+  const orders = getOrders();
+  const o = orders.find((x) => x.id === id);
+  if (!o) return null;
+  o.status = "Ready for Pickup";
+  o.pickupWindowStart = windowStart;
+  o.pickupWindowEnd = windowEnd;
+  pushHistory(o, o.status);
+  saveOrders(orders);
+  logAudit("order-status", `Order ${o.id} (${o.name}) is ready for pickup, ${windowStart}–${windowEnd}.`);
+  return o;
+}
+
 export function setBookingArrivalTime(id: string, arrivalTime: string): Booking | null {
   const bookings = getBookings();
   const b = bookings.find((x) => x.id === id);

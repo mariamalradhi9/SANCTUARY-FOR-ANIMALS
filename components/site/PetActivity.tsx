@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import ActivityLabel from "../ActivityLabel";
+import TrackingTimeline, { type TimelineStep } from "../TrackingTimeline";
 import type { Animal, HistoryEntry } from "@/lib/types";
 import { getApplications, getBookings, latestActivityDate } from "@/lib/records";
-import { badgeClassFor } from "@/lib/format";
+import { badgeClassFor, formatDate } from "@/lib/format";
 
 const PET_ACTIVITY_LABELS: Record<string, string> = { walk: "Walk", play: "Playtime", groom: "Grooming" };
 
@@ -58,11 +59,13 @@ export default function PetActivity({ pet }: { pet: Animal }) {
             </div>
             <span className={`badge ${badgeClassFor(item.status)}`}>{item.status}</span>
           </summary>
-          <ul className="activity-timeline">
-            {item.history.map((h, j) => (
-              <li key={j}><span className={`badge ${badgeClassFor(h.status)}`}>{h.status}</span> <span className="activity-timeline-date">{h.date}</span></li>
-            ))}
-          </ul>
+          <TrackingTimeline
+            steps={item.history.map((h, j): TimelineStep => ({
+              label: h.status,
+              date: formatDate(h.date),
+              state: j === item.history.length - 1 ? "current" : "done",
+            }))}
+          />
         </details>
       ))}
     </div>

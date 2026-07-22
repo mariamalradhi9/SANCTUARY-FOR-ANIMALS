@@ -149,7 +149,9 @@ export interface CartItem {
   qty: number;
 }
 
-export type OrderStatus = "Processing" | "Shipped" | "Out for Delivery" | "Delivered";
+export type FulfillmentMethod = "delivery" | "pickup";
+
+export type OrderStatus = "Processing" | "Shipped" | "Out for Delivery" | "Delivered" | "Ready for Pickup" | "Picked Up";
 
 export interface Order {
   id: string;
@@ -157,7 +159,11 @@ export interface Order {
   total: number;
   name: string;
   phone: string;
+  address?: string;
   date: string;
+  fulfillment: FulfillmentMethod;
+  pickupWindowStart?: string;
+  pickupWindowEnd?: string;
   status: OrderStatus;
   history: HistoryEntry[];
 }
