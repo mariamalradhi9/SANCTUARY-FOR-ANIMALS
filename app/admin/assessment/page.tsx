@@ -8,7 +8,7 @@ import ScoreScale from "@/components/admin/ScoreScale";
 import { getAnimals } from "@/lib/animals";
 import { getLatestAssessment, saveAssessment } from "@/lib/records";
 import { logAudit } from "@/lib/admin/audit";
-import { ageLabel } from "@/lib/format";
+import { ageLabel, formatDate } from "@/lib/format";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Assessment } from "@/lib/types";
@@ -27,7 +27,7 @@ const STEPS: { n: number; icon: React.ReactNode; label: string }[] = [
 type FormState = Omit<Assessment, "petId" | "savedAt">;
 
 const EMPTY_FORM: FormState = {
-  dogName: "", evalDate: "", breedMix: "", weightCondition: "", estAge: "", specialist: "", location: "",
+  dogName: "", evalDate: "", breedMix: "", weightCondition: "", dob: "", specialist: "", location: "",
   sex: "", altered: "", vaccinated: "", goodWithKids: "",
   profileScores: {},
   preyDrive: "", foodDrive: "", socialDrive: "",
@@ -40,7 +40,7 @@ const EMPTY_FORM: FormState = {
 function fromAssessment(a: Assessment, fallbackName: string): FormState {
   return {
     dogName: a.dogName || fallbackName, evalDate: a.evalDate || "", breedMix: a.breedMix || "",
-    weightCondition: a.weightCondition || "", estAge: a.estAge || "", specialist: a.specialist || "", location: a.location || "",
+    weightCondition: a.weightCondition || "", dob: a.dob || "", specialist: a.specialist || "", location: a.location || "",
     sex: a.sex || "", altered: a.altered || "", vaccinated: a.vaccinated || "", goodWithKids: a.goodWithKids || "",
     profileScores: a.profileScores || {},
     preyDrive: a.preyDrive || "", foodDrive: a.foodDrive || "", socialDrive: a.socialDrive || "",
@@ -163,7 +163,7 @@ function AssessmentPageInner() {
     const data: Assessment = {
       petId,
       ...form,
-      estAge: selectedAnimal ? ageLabel(selectedAnimal.dob) : form.estAge,
+      dob: selectedAnimal ? selectedAnimal.dob : form.dob,
       savedAt: new Date().toISOString(),
     };
     saveAssessment(data);
@@ -245,7 +245,11 @@ function AssessmentPageInner() {
                   </div>
                   <div className="row-2">
                     <div className={fieldClass("field", "weightCondition")}><label htmlFor="weightCondition">Weight / Condition</label><input type="text" id="weightCondition" value={form.weightCondition} onChange={(e) => set("weightCondition", e.target.value)} /></div>
-                    <div className="field"><label htmlFor="estAge">Estimated Age</label><input type="text" id="estAge" value={selectedAnimal ? ageLabel(selectedAnimal.dob) : ""} disabled /><p className="hint">Computed automatically from the animal&apos;s date of birth.</p></div>
+                    <div className="field">
+                      <label htmlFor="dob">Date of Birth</label>
+                      <input type="text" id="dob" value={selectedAnimal?.dob ? `${formatDate(selectedAnimal.dob)} (${ageLabel(selectedAnimal.dob)} old)` : ""} disabled />
+                      <p className="hint">Pulled from the animal&apos;s profile — age is calculated automatically. To correct it, edit the animal&apos;s date of birth from the Animals page.</p>
+                    </div>
                   </div>
                   <div className="row-2">
                     <div className={fieldClass("field", "vaccinated")}>
