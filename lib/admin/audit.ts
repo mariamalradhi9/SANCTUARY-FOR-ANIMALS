@@ -19,7 +19,7 @@ export const AUDIT_ACTION_LABELS: Record<string, string> = {
   "animal-onboarded": "Animal Onboarded",
   "animal-update": "Animal Updated",
   "animal-deleted": "🗑️ Animal Removed",
-  "assessment-saved": "🧠 Assessment Saved",
+  "assessment-saved": "<img src=\"/icons/user.png\" alt=\"\" className=\"icon-img-sm\" /> Assessment Saved",
   "booking-status": "Booking Status Changed",
   "application-status": "Application Status Changed",
   "report-exported": "Report Exported",

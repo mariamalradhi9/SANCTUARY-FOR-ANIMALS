@@ -167,7 +167,7 @@ export default function AdminReportsPage() {
         alerts.push({ level: "danger", key: `${a.id}-med`, node: <><img src="/icons/alarm.png" alt="" className="icon-img-sm" /> <strong>{a.name}</strong> has a Critical medical status — needs immediate attention.</> });
       }
       if ((a.aggressionLevel === "High" || a.aggressionLevel === "Severe") && a.medicalStatus === "Under Treatment") {
-        alerts.push({ level: "warning", key: `${a.id}-agg`, node: <>⚠️ <strong>{a.name}</strong> is {a.aggressionLevel.toLowerCase()}-aggression and under treatment — plan a safe multi-person handling protocol.</> });
+        alerts.push({ level: "warning", key: `${a.id}-agg`, node: <><img src="/icons/alarm.png" alt="" className="icon-img-sm" /> <strong>{a.name}</strong> is {a.aggressionLevel.toLowerCase()}-aggression and under treatment — plan a safe multi-person handling protocol.</> });
       }
     });
     return alerts;
