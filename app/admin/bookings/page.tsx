@@ -114,9 +114,7 @@ export default function AdminBookingsPage() {
                 <option value="Completed">Completed</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
-            </div>
 
-            <div className="admin-card">
               <div className="pill-filter-bar">
                 <button type="button" className={`pill-filter-btn${activityFilter === "" ? " active" : ""}`} onClick={() => setActivityFilter("")}>
                   <img src="/icons/pets.png" alt="" /> All
@@ -138,6 +136,10 @@ export default function AdminBookingsPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
+            </div>
+
+            <div className="admin-card">
+              
               </div>
 
               {list.length === 0 ? (
