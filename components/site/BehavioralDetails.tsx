@@ -39,7 +39,7 @@ export default function BehavioralDetails({ latest }: { latest: Assessment | nul
 
       {drives.length > 0 && (
         <>
-          <h4 className="sub-title">⚡ Drive System Analysis (Motivation)</h4>
+          <h4 className="sub-title"><img src="/icons/drives.png" alt="" className="icon-img-sm" /> Drive System Analysis (Motivation)</h4>
           <div className="behavior-traits">
             {drives.map(([label, value]) => (
               <div className="behavior-trait" key={label}><span>{label}</span><strong>{value}</strong></div>

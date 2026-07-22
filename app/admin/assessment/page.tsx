@@ -258,7 +258,7 @@ function AssessmentPageInner() {
 
               {step === 3 && (
                 <div className="assess-step active" data-step="3">
-                  <h3 className="section-title"><span className="sec-icon">⚡</span> III. Drive System Analysis (Motivation)</h3>
+                  <h3 className="section-title"><span className="sec-icon"><img src="/icons/drives.png" alt="" /></span> III. Drive System Analysis (Motivation)</h3>
 
                   <h4 className="sub-title">1. Prey / Toy Drive (Biological Pursuit)</h4>
                   <div className="option-list">

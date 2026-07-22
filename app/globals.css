@@ -1707,6 +1707,8 @@ textarea { resize: vertical; min-height: 100px; }
   left: 16px;
   right: 16px;
   bottom: 48px;
+  width: calc(100% - 32px);
+  height: calc(100% - 76px);
   pointer-events: none;
   z-index: 2;
   overflow: visible;
