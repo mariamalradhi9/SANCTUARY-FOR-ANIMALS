@@ -114,7 +114,9 @@ export default function AdminBookingsPage() {
                 <option value="Completed">Completed</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
-
+              
+              <br /><br />
+              
               <button type="button" className={`pill-filter-btn${activityFilter === "" ? " active" : ""}`} onClick={() => setActivityFilter("")}>
                   <img src="/icons/pets.png" alt="" /> All
                 </button>
@@ -128,10 +130,7 @@ export default function AdminBookingsPage() {
                     <img src={ACTIVITY_ICONS[a]} alt="" /> {ACTIVITY_LABELS[a]}
                   </button>
                 ))}
-            </div>
 
-            <div className="admin-card">
-              <div className="pill-filter-bar">
                 <input
                   type="text"
                   className="pill-filter-search"
@@ -139,7 +138,12 @@ export default function AdminBookingsPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-              </div>
+            </div>
+
+            <div className="admin-card">
+              {/* <div className="pill-filter-bar">
+                
+              </div> */}
 
               {list.length === 0 ? (
                 <p className="admin-empty">No booking requests match your filters.</p>
