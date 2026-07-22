@@ -7,9 +7,10 @@ import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 import SmartBackLink from "@/components/site/SmartBackLink";
 import { getCart, saveCart, cartTotal } from "@/lib/cart";
+import { getOrders, saveOrders } from "@/lib/records";
 import { formatBHD } from "@/lib/format";
 import { usePageTitle } from "@/lib/usePageTitle";
-import type { CartItem } from "@/lib/types";
+import type { CartItem, Order } from "@/lib/types";
 
 export default function CheckoutPage() {
   usePageTitle("Checkout — Aamal Almoayyed Sanctuary");
@@ -34,12 +35,25 @@ export default function CheckoutPage() {
   if (!cart) return null;
 
   function handlePlaceOrder() {
+    if (!cart) return;
     if (!name.trim() || !phone.trim() || !card.trim() || !expiry.trim() || !cvv.trim()) {
       alert("Please fill in all fields to confirm your sponsorship.");
       return;
     }
 
     const num = "AAM-" + Date.now().toString().slice(-6);
+    const today = new Date().toISOString().slice(0, 10);
+    const order: Order = {
+      id: num,
+      items: cart,
+      total: cartTotal(cart),
+      name: name.trim(),
+      phone: phone.trim(),
+      date: today,
+      status: "Processing",
+      history: [{ status: "Processing", date: today }],
+    };
+    saveOrders([...getOrders(), order]);
     saveCart([]);
     window.dispatchEvent(new Event("pp:cart-changed"));
     setOrderNumber(num);

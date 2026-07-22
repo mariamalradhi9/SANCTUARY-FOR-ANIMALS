@@ -22,6 +22,7 @@ export const AUDIT_ACTION_LABELS: Record<string, string> = {
   "assessment-saved": "<img src=\"/icons/user.png\" alt=\"\" className=\"icon-img-sm\" /> Assessment Saved",
   "booking-status": "Booking Status Changed",
   "application-status": "Application Status Changed",
+  "order-status": "Shop Order Status Changed",
   "report-exported": "Report Exported",
 };
 
@@ -31,5 +32,6 @@ export const AUDIT_ACTION_ICONS: Record<string, string> = {
   "animal-update": "/icons/edit.png",
   "booking-status": "/icons/calendar.png",
   "application-status": "/icons/documents.png",
+  "order-status": "/icons/cart.png",
   "report-exported": "/icons/export.png",
 };

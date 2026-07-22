@@ -1,7 +1,7 @@
 // Small formatting/status helpers ported from js/admin-common.js and js/dashboard.js.
 
 export function badgeClassFor(status: string): string {
-  if (status === "Approved" || status === "Confirmed" || status === "Completed") return "badge-success";
+  if (status === "Approved" || status === "Confirmed" || status === "Completed" || status === "Delivered") return "badge-success";
   if (status === "Declined" || status === "Cancelled") return "badge-danger";
   return "badge-warning";
 }

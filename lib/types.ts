@@ -81,6 +81,8 @@ export interface Application {
   status: string;
   history: HistoryEntry[];
   photo?: string;
+  pickupDate?: string;
+  pickupTime?: string;
 }
 
 export type Activity = "walk" | "play" | "groom";
@@ -97,6 +99,7 @@ export interface Booking {
   duration: string;
   status: string;
   history: HistoryEntry[];
+  arrivalTime?: string;
 }
 
 export interface ProfileScores {
@@ -144,6 +147,19 @@ export interface CartItem {
   name: string;
   price: number;
   qty: number;
+}
+
+export type OrderStatus = "Processing" | "Shipped" | "Out for Delivery" | "Delivered";
+
+export interface Order {
+  id: string;
+  items: CartItem[];
+  total: number;
+  name: string;
+  phone: string;
+  date: string;
+  status: OrderStatus;
+  history: HistoryEntry[];
 }
 
 export type Role = "admin" | "user";

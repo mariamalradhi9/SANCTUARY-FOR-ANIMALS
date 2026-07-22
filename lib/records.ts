@@ -1,7 +1,7 @@
 // Applications / Bookings / Assessments persistence, ported from js/admin-common.js,
 // js/adopt.js, js/booking.js and js/assessment-form.js.
 
-import type { Application, Assessment, Booking, HistoryEntry } from "./types";
+import type { Application, Assessment, Booking, HistoryEntry, Order } from "./types";
 import { readJSON, writeJSON } from "./storage";
 
 export function getApplications(): Application[] {
@@ -16,6 +16,13 @@ export function getBookings(): Booking[] {
 }
 export function saveBookings(list: Booking[]): void {
   writeJSON("pp_bookings", list);
+}
+
+export function getOrders(): Order[] {
+  return readJSON<Order[]>("pp_orders", []);
+}
+export function saveOrders(list: Order[]): void {
+  writeJSON("pp_orders", list);
 }
 
 export function getAssessments(): Assessment[] {

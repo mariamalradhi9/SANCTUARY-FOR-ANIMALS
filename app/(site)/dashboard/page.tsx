@@ -10,16 +10,18 @@ import SiteFooter from "@/components/site/SiteFooter";
 import FavButton from "@/components/site/FavButton";
 import ActivityLabel from "@/components/ActivityLabel";
 import { getAnimals } from "@/lib/animals";
-import { getApplications, getBookings, latestActivityDate } from "@/lib/records";
+import { getApplications, getBookings, getOrders, latestActivityDate } from "@/lib/records";
 import { getFavorites } from "@/lib/favorites";
-import { badgeClassFor, statusCategoryFor } from "@/lib/format";
+import { badgeClassFor, formatBHD, formatDate, statusCategoryFor } from "@/lib/format";
 import { clearSession } from "@/lib/session";
 import { readJSON, writeJSON } from "@/lib/storage";
 import { usePageTitle } from "@/lib/usePageTitle";
-import type { HistoryEntry } from "@/lib/types";
+import type { HistoryEntry, Order, OrderStatus } from "@/lib/types";
 
-type Tab = "applications" | "saved" | "messages" | "settings";
+type Tab = "applications" | "orders" | "saved" | "messages" | "settings";
 type StatusFilter = "all" | "accepted" | "pending" | "rejected";
+
+const ORDER_STEPS: OrderStatus[] = ["Processing", "Shipped", "Out for Delivery", "Delivered"];
 
 const ACTIVITY_LABELS: Record<string, string> = { walk: "Walk", play: "Playtime", groom: "Grooming" };
 
@@ -30,6 +32,9 @@ interface ActivityItem {
   subtitle: string;
   status: string;
   history: HistoryEntry[];
+  pickupDate?: string;
+  pickupTime?: string;
+  arrivalTime?: string;
 }
 
 export default function DashboardPage() {
@@ -38,6 +43,7 @@ export default function DashboardPage() {
   const [tab, setTab] = useState<Tab>("applications");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [activity, setActivity] = useState<ActivityItem[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [favIds, setFavIds] = useState<string[]>([]);
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
 
@@ -49,6 +55,8 @@ export default function DashboardPage() {
       subtitle: `Applicant: ${app.applicant} · Submitted ${app.date}`,
       status: app.status,
       history: app.history?.length ? app.history : [{ status: app.status, date: app.date }],
+      pickupDate: app.pickupDate,
+      pickupTime: app.pickupTime,
     }));
     const bookings: ActivityItem[] = getBookings().map((b) => ({
       type: "booking",
@@ -57,8 +65,10 @@ export default function DashboardPage() {
       subtitle: `${b.date} at ${b.slot}${b.duration ? " · " + b.duration : ""}`,
       status: b.status,
       history: b.history?.length ? b.history : [{ status: b.status, date: b.date }],
+      arrivalTime: b.arrivalTime,
     }));
     setActivity([...applications, ...bookings].sort((a, b) => (latestActivityDate(a) < latestActivityDate(b) ? 1 : -1)));
+    setOrders(getOrders().slice().reverse());
     setFavIds(getFavorites());
     setProfilePhoto(readJSON<string | null>("pp_profile_photo", null));
   }, []);
@@ -96,6 +106,7 @@ export default function DashboardPage() {
             </div>
             <ul className="dash-nav">
               <li><a href="#" className={`dash-link${tab === "applications" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("applications"); }}><img src="/icons/documents.png" alt="" className="icon-img-sm" /> My Applications</a></li>
+              <li><a href="#" className={`dash-link${tab === "orders" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("orders"); }}><img src="/icons/cart.png" alt="" className="icon-img-sm" /> My Orders</a></li>
               <li><a href="#" className={`dash-link${tab === "saved" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("saved"); }}><img src="/icons/heart.png" alt="" className="icon-img-sm" /> Saved Pets</a></li>
               <li><a href="#" className={`dash-link${tab === "messages" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("messages"); }}><img src="/icons/message.png" alt="" className="icon-img-sm" /> Messages</a></li>
               <li><a href="#" className={`dash-link${tab === "settings" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("settings"); }}><img src="/icons/setting.png" alt="" className="icon-img-sm" /> Settings</a></li>
@@ -136,6 +147,16 @@ export default function DashboardPage() {
                           </div>
                           <span className={`badge ${badgeClassFor(item.status)}`}>{item.status}</span>
                         </summary>
+                        {item.pickupDate && item.pickupTime && (
+                          <p className="pickup-notice">
+                            <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Pickup scheduled for <strong>{formatDate(item.pickupDate)}</strong> at <strong>{item.pickupTime}</strong>
+                          </p>
+                        )}
+                        {item.arrivalTime && (
+                          <p className="pickup-notice">
+                            <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Please arrive by <strong>{item.arrivalTime}</strong>
+                          </p>
+                        )}
                         <ul className="activity-timeline">
                           {item.history.map((h, j) => (
                             <li key={j}><span className={`badge ${badgeClassFor(h.status)}`}>{h.status}</span> <span className="activity-timeline-date">{h.date}</span></li>
@@ -145,6 +166,39 @@ export default function DashboardPage() {
                     ))
                   )}
                 </div>
+              </div>
+            )}
+
+            {tab === "orders" && (
+              <div className="dash-panel active">
+                <h2>My Orders</h2>
+                {orders.length === 0 ? (
+                  <p>No sponsorship orders yet. <Link href="/shop" style={{ color: "var(--color-primary)", fontWeight: 700 }}>Visit the shop →</Link></p>
+                ) : (
+                  orders.map((o) => {
+                    const stepIdx = ORDER_STEPS.indexOf(o.status);
+                    return (
+                      <details className="app-row-details" key={o.id}>
+                        <summary className="app-row">
+                          <div>
+                            <strong>Order {o.id}</strong>
+                            <p style={{ margin: "2px 0 0" }}>{o.items.map((it) => `${it.name} ×${it.qty}`).join(", ")} · Placed {formatDate(o.date)}</p>
+                          </div>
+                          <span className={`badge ${badgeClassFor(o.status)}`}>{o.status}</span>
+                        </summary>
+                        <div className="order-track">
+                          {ORDER_STEPS.map((s, i) => (
+                            <div className={`order-track-step${i <= stepIdx ? " done" : ""}`} key={s}>
+                              <span className="order-track-dot" />
+                              <span>{s}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <p style={{ margin: "10px 0 0", fontWeight: 700 }}>Total: {formatBHD(o.total)}</p>
+                      </details>
+                    );
+                  })
+                )}
               </div>
             )}
 

@@ -6,7 +6,7 @@ import AdminTopbar from "@/components/admin/AdminTopbar";
 import BookingActionButtons from "@/components/admin/BookingActionButtons";
 import ActivityLabel from "@/components/ActivityLabel";
 import { getBookings } from "@/lib/records";
-import { applyBookingAction, type BookingAction } from "@/lib/admin/bookingActions";
+import { applyBookingAction, setBookingArrivalTime, type BookingAction } from "@/lib/admin/bookingActions";
 import { badgeClassFor, formatDate } from "@/lib/format";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
@@ -23,6 +23,7 @@ export default function AdminBookingsPage() {
   const { message, show, showToast } = useToast();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [statusFilter, setStatusFilter] = useState("");
+  const [arrivalDrafts, setArrivalDrafts] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setBookings(getBookings());
@@ -33,6 +34,15 @@ export default function AdminBookingsPage() {
     if (!b) return;
     setBookings(getBookings());
     showToast(`Booking for ${b.petName} marked as "${b.status}".`);
+  }
+
+  function handleSaveArrival(id: string) {
+    const value = arrivalDrafts[id];
+    if (!value) return;
+    const b = setBookingArrivalTime(id, value);
+    if (!b) return;
+    setBookings(getBookings());
+    showToast(`Arrival time for ${b.petName}'s visit set to ${value}.`);
   }
 
   const list = useMemo(() => {
@@ -70,7 +80,7 @@ export default function AdminBookingsPage() {
                 <div className="table-scroll">
                   <table className="admin-table">
                     <thead>
-                      <tr><th>User</th><th>Animal</th><th>Activity</th><th>Date &amp; Time</th><th>Duration</th><th>Status</th><th>Actions</th></tr>
+                      <tr><th>User</th><th>Animal</th><th>Activity</th><th>Date &amp; Time</th><th>Arrival Time</th><th>Duration</th><th>Status</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
                       {list.map((b) => (
@@ -84,6 +94,27 @@ export default function AdminBookingsPage() {
                           <td>{b.petName}</td>
                           <td><ActivityLabel activity={b.activity} text={ACTIVITY_LABELS[b.activity] || b.activity} /></td>
                           <td>{formatDate(b.date)}<br /><span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>{b.slot}</span></td>
+                          <td>
+                            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                              <input
+                                type="time"
+                                value={arrivalDrafts[b.id] ?? b.arrivalTime ?? ""}
+                                onChange={(e) => setArrivalDrafts((prev) => ({ ...prev, [b.id]: e.target.value }))}
+                                style={{ width: 110 }}
+                              />
+                              <button
+                                type="button"
+                                className="btn btn-ghost btn-sm"
+                                disabled={!arrivalDrafts[b.id] || arrivalDrafts[b.id] === b.arrivalTime}
+                                onClick={() => handleSaveArrival(b.id)}
+                              >
+                                Save
+                              </button>
+                            </div>
+                            {b.arrivalTime && (
+                              <span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>Arrive by {b.arrivalTime}</span>
+                            )}
+                          </td>
                           <td>{b.duration || "—"}</td>
                           <td><span className={`badge ${badgeClassFor(b.status)}`}>{b.status}</span></td>
                           <td>

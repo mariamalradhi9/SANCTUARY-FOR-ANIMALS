@@ -7,7 +7,7 @@ import ApplicationActionButtons from "@/components/admin/ApplicationActionButton
 import ApplicationDetailModal from "@/components/admin/ApplicationDetailModal";
 import { getAnimals } from "@/lib/animals";
 import { getApplications } from "@/lib/records";
-import { applyApplicationAction, type ApplicationAction } from "@/lib/admin/bookingActions";
+import { applyApplicationAction, scheduleApplicationPickup, type ApplicationAction } from "@/lib/admin/bookingActions";
 import { badgeClassFor, formatDate } from "@/lib/format";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
@@ -39,6 +39,14 @@ export default function AdminApplicationsPage() {
     if (!a) return;
     setApplications(getApplications());
     showToast(`Application for ${a.petName} marked as "${a.status}".`);
+  }
+
+  function handleSchedulePickup(id: string, pickupDate: string, pickupTime: string) {
+    const a = scheduleApplicationPickup(id, pickupDate, pickupTime);
+    if (!a) return;
+    setApplications(getApplications());
+    setViewing(a);
+    showToast(`Pickup for ${a.petName} scheduled for ${pickupDate} at ${pickupTime}.`);
   }
 
   const list = useMemo(() => {
@@ -115,7 +123,7 @@ export default function AdminApplicationsPage() {
         </main>
       </div>
 
-      <ApplicationDetailModal application={viewing} onClose={() => setViewing(null)} />
+      <ApplicationDetailModal application={viewing} onClose={() => setViewing(null)} onSchedulePickup={handleSchedulePickup} />
     </AuthGuard>
   );
 }

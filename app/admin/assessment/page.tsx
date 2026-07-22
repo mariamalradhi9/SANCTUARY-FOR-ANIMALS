@@ -4,6 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
 import AdminTopbar from "@/components/admin/AdminTopbar";
+import ScoreScale from "@/components/admin/ScoreScale";
 import { getAnimals } from "@/lib/animals";
 import { getLatestAssessment, saveAssessment } from "@/lib/records";
 import { logAudit } from "@/lib/admin/audit";
@@ -221,7 +222,7 @@ function AssessmentPageInner() {
               {step === 2 && (
                 <div className="assess-step active" data-step="2">
                   <h3 className="section-title"><span className="sec-icon">🧠</span> II. Psychological Profiling (Temperament)</h3>
-                  <p className="hint">Rate on a scale of 1–5 (1: Minimal/Low | 5: Intense/High Expression)</p>
+                  <p className="hint">Tap a circle to rate — from Low (1) to High (5) expression.</p>
                   <table className="profile-table">
                     <thead>
                       <tr><th>Behavioral Metric</th><th>Score</th><th>Clinical Behavioral Markers</th></tr>
@@ -231,18 +232,10 @@ function AssessmentPageInner() {
                         <tr key={key}>
                           <td>{label}</td>
                           <td>
-                            <select
-                              className="score-select"
+                            <ScoreScale
                               value={form.profileScores[key] || ""}
-                              onChange={(e) => set("profileScores", { ...form.profileScores, [key]: e.target.value })}
-                            >
-                              <option value="">–</option>
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                              <option value="4">4</option>
-                              <option value="5">5</option>
-                            </select>
+                              onChange={(v) => set("profileScores", { ...form.profileScores, [key]: v })}
+                            />
                           </td>
                           <td className="marker-cell">{marker}</td>
                         </tr>
