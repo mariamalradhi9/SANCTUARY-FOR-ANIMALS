@@ -14,12 +14,12 @@ import type { Assessment } from "@/lib/types";
 const TOTAL_STEPS = 6;
 
 const STEPS: { n: number; icon: React.ReactNode; label: string }[] = [
-  { n: 1, icon: "🐕", label: "Intake" },
-  { n: 2, icon: "🧠", label: "Profiling" },
-  { n: 3, icon: "⚡", label: "Drives" },
+  { n: 1, icon: <img src="/icons/pets.png" alt="" />, label: "Intake" },
+  { n: 2, icon: <img src="/icons/user.png" alt="" />, label: "Profiling" },
+  { n: 3, icon: <img src="/icons/drives.png" alt="" />, label: "Drives" },
   { n: 4, icon: <img src="/icons/paw.png" alt="" />, label: "Dog-to-Dog" },
-  { n: 5, icon: "⚠️", label: "Safety" },
-  { n: 6, icon: "🏁", label: "Disposition" },
+  { n: 5, icon: <img src="/icons/alarm.png" alt="" />, label: "Safety" },
+  { n: 6, icon: <img src="/icons/disposition.png" alt="" />, label: "Disposition" },
 ];
 
 type FormState = Omit<Assessment, "petId" | "savedAt">;

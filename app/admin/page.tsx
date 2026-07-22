@@ -92,24 +92,28 @@ export default function AdminDashboardPage() {
 
             <div className="admin-stats grid-4">
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Total Animals</span><span className="admin-stat-icon"><img src="/icons/pets.png" alt="" /></span></div>
+                <div className="admin-stat-head"><span>Total Animals</span></div>
                 <h2>{totalAnimals}</h2>
                 <Link href="/admin/animals">View all animals →</Link>
+                <div className="admin-stat-corner"><img src="/icons/pets.png" alt="" /></div>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Available for Walks</span><span className="admin-stat-icon"><img src="/icons/walk.png" alt="" /></span></div>
+                <div className="admin-stat-head"><span>Available for Walks</span></div>
                 <h2>{availableCount}</h2>
                 <Link href="/admin/animals">View available →</Link>
+                <div className="admin-stat-corner"><img src="/icons/walk.png" alt="" /></div>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Pending Bookings</span><span className="admin-stat-icon"><img src="/icons/calendar.png" alt="" /></span></div>
+                <div className="admin-stat-head"><span>Pending Bookings</span></div>
                 <h2>{pendingBookings}</h2>
                 <Link href="/admin/bookings">Review requests →</Link>
+                <div className="admin-stat-corner"><img src="/icons/calendar.png" alt="" /></div>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Completed This Month</span><span className="admin-stat-icon"><img src="/icons/check-clock.png" alt="" /></span></div>
+                <div className="admin-stat-head"><span>Completed This Month</span></div>
                 <h2>{completedThisMonth}</h2>
                 <Link href="/admin/reports">View reports →</Link>
+                <div className="admin-stat-corner"><img src="/icons/check-clock.png" alt="" /></div>
               </div>
             </div>
 

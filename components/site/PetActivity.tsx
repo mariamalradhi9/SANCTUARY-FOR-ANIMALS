@@ -48,7 +48,7 @@ export default function PetActivity({ pet }: { pet: Animal }) {
 
   return (
     <div className="pet-activity">
-      <h3>🕓 Community Activity for {pet.name}</h3>
+      <h3><img src="/icons/history.png" alt="" className="icon-img-md" /> Community Activity for {pet.name}</h3>
       {items.map((item, i) => (
         <details className="app-row-details" key={i}>
           <summary className="app-row">

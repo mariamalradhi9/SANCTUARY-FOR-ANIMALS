@@ -6,6 +6,7 @@ import AdminTopbar from "@/components/admin/AdminTopbar";
 import AnimalFormModal, { type AnimalFormData } from "@/components/admin/AnimalFormModal";
 import AnimalHistoryModal from "@/components/admin/AnimalHistoryModal";
 import AnimalViewModal from "@/components/admin/AnimalViewModal";
+import ConfirmModal from "@/components/ConfirmModal";
 import { addAnimal, deleteAnimal, getAnimals, updateAnimal } from "@/lib/animals";
 import { logAudit } from "@/lib/admin/audit";
 import { useToast } from "@/lib/admin/useToast";
@@ -29,6 +30,7 @@ export default function AdminAnimalsPage() {
   const [editingAnimal, setEditingAnimal] = useState<Animal | null>(null);
   const [historyPetId, setHistoryPetId] = useState<string | null>(null);
   const [viewingAnimal, setViewingAnimal] = useState<Animal | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Animal | null>(null);
 
   useEffect(() => {
     setAnimals(getAnimals());
@@ -70,12 +72,13 @@ export default function AdminAnimalsPage() {
     setFormOpen(false);
   }
 
-  function handleDelete(a: Animal) {
-    if (!confirm(`Remove ${a.name} from the catalog? This can't be undone.`)) return;
-    deleteAnimal(a.id);
-    logAudit("animal-deleted", `${a.name} was removed from the catalog.`);
-    showToast(`${a.name} removed.`);
+  function confirmDelete() {
+    if (!deleteTarget) return;
+    deleteAnimal(deleteTarget.id);
+    logAudit("animal-deleted", `${deleteTarget.name} was removed from the catalog.`);
+    showToast(`${deleteTarget.name} removed.`);
     setAnimals(getAnimals());
+    setDeleteTarget(null);
   }
 
   return (
@@ -134,9 +137,9 @@ export default function AdminAnimalsPage() {
                         <div className="animal-card-actions">
                           <button type="button" className="btn btn-ghost" onClick={() => setViewingAnimal(a)}>View</button>
                           <button type="button" className="btn btn-outline" onClick={() => openEditModal(a)}>Edit</button>
-                          <a href={`/admin/assessment?pet=${a.id}`} className="btn btn-ghost">🩺 Assessment</a>
-                          <button type="button" className="btn btn-ghost" onClick={() => setHistoryPetId(a.id)}>🕓 History</button>
-                          <button type="button" className="btn btn-ghost" style={{ color: "var(--color-danger)", borderColor: "var(--color-danger)" }} onClick={() => handleDelete(a)}>Delete</button>
+                          <a href={`/admin/assessment?pet=${a.id}`} className="btn btn-ghost"><img src="/icons/assessment.png" alt="" className="icon-img-sm" /> Assessment</a>
+                          <button type="button" className="btn btn-ghost" onClick={() => setHistoryPetId(a.id)}><img src="/icons/history.png" alt="" className="icon-img-sm" /> History</button>
+                          <button type="button" className="btn btn-ghost" style={{ color: "var(--color-danger)", borderColor: "var(--color-danger)" }} onClick={() => setDeleteTarget(a)}>Delete</button>
                         </div>
                       </div>
                     </div>
@@ -151,6 +154,14 @@ export default function AdminAnimalsPage() {
       <AnimalFormModal open={formOpen} animal={editingAnimal} onClose={() => setFormOpen(false)} onSave={handleSave} />
       <AnimalHistoryModal petId={historyPetId} onClose={() => setHistoryPetId(null)} />
       <AnimalViewModal animal={viewingAnimal} onClose={() => setViewingAnimal(null)} />
+      <ConfirmModal
+        open={!!deleteTarget}
+        title="Remove Animal"
+        message={`Remove ${deleteTarget?.name} from the catalog? This can't be undone.`}
+        confirmLabel="Delete"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </AuthGuard>
   );
 }

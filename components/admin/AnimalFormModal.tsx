@@ -251,7 +251,7 @@ export default function AnimalFormModal({ open, animal, onClose, onSave }: {
           </div>
         )}
 
-        <h4 className="sub-title">🩺 Health &amp; Behavior</h4>
+        <h4 className="sub-title"><img src="/icons/assessment.png" alt="" className="icon-img-sm" /> Health &amp; Behavior</h4>
         <div className="row-2">
           <div className="field">
             <label htmlFor="animalAggressionLevel">Aggression Level</label>

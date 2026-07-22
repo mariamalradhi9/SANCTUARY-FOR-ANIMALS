@@ -62,7 +62,7 @@ export default function ApplicationDetailModal({ application, onClose }: { appli
         ["Household Members", application.householdSize],
         ["Other Pets at Home", application.otherPets],
       ]} />
-      <DetailGroup title="💬 Adoption Reason" rows={[
+      <DetailGroup title={<><img src="/icons/message.png" alt="" className="icon-img-sm" /> Adoption Reason</>} rows={[
         ["Why Adopt", application.whyAdopt],
         ["Submitted", formatDate(application.date)],
       ]} />

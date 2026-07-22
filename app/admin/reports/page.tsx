@@ -117,6 +117,20 @@ export default function AdminReportsPage() {
   }, [bookings]);
   const chartMax = Math.max(1, ...chartMonths.map((m) => m.count));
 
+  function barTier(count: number): string {
+    if (count === 0) return "";
+    const ratio = count / chartMax;
+    if (ratio >= 0.99) return "peak";
+    if (ratio >= 0.66) return "high";
+    if (ratio >= 0.33) return "mid";
+    return "low";
+  }
+
+  const trendPoints = chartMonths.map((m, i) => ({
+    x: (i + 0.5) * (100 / chartMonths.length),
+    y: 100 - (m.count / chartMax) * 100,
+  }));
+
   const notes = useMemo(() => {
     const list: string[] = [];
     if (bookings.length > 0) {
@@ -190,24 +204,28 @@ export default function AdminReportsPage() {
 
             <div className="admin-stats grid-4">
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Approval Rate</span><span className="admin-stat-icon"><img src="/icons/check-clock.png" alt="" /></span></div>
+                <div className="admin-stat-head"><span>Approval Rate</span></div>
                 <h2>{approvalRate.rate}%</h2>
                 <span style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>{approvalRate.sub}</span>
+                <div className="admin-stat-corner"><img src="/icons/check-clock.png" alt="" /></div>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Most Walked Animal</span><span className="admin-stat-icon"><img src="/icons/walk.png" alt="" /></span></div>
+                <div className="admin-stat-head"><span>Most Walked Animal</span></div>
                 <h2>{mostWalked.name}</h2>
                 <span style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>{mostWalked.sub}</span>
+                <div className="admin-stat-corner"><img src="/icons/walk.png" alt="" /></div>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Cancellation Rate</span><span className="admin-stat-icon"><img src="/icons/cancelled.png" alt="" /></span></div>
+                <div className="admin-stat-head"><span>Cancellation Rate</span></div>
                 <h2>{cancelRate}%</h2>
                 <span style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>of all visit bookings</span>
+                <div className="admin-stat-corner"><img src="/icons/cancelled.png" alt="" /></div>
               </div>
               <div className="admin-stat">
-                <div className="admin-stat-head"><span>Total Visitors</span><span className="admin-stat-icon"><img src="/icons/visitor.png" alt="" /></span></div>
+                <div className="admin-stat-head"><span>Total Visitors</span></div>
                 <h2>{uniqueVisitors}</h2>
                 <span style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>unique names on file</span>
+                <div className="admin-stat-corner"><img src="/icons/visitor.png" alt="" /></div>
               </div>
             </div>
 
@@ -218,12 +236,21 @@ export default function AdminReportsPage() {
                   <div className="bar-chart-gridlines">
                     <span></span><span></span><span></span><span></span>
                   </div>
+                  <svg className="bar-chart-trend" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <polyline
+                      className="bar-chart-trend-line"
+                      points={trendPoints.map((p) => `${p.x},${p.y}`).join(" ")}
+                    />
+                    {trendPoints.map((p, i) => (
+                      <circle key={i} className="bar-chart-trend-dot" cx={p.x} cy={p.y} r="1.6" />
+                    ))}
+                  </svg>
                   {chartMonths.map((m) => (
                     <div className="bar-chart-col" key={`${m.year}-${m.month}`}>
-                      <div className="bar-chart-bar-wrap">
+                      <div className={`bar-chart-bar-wrap ${barTier(m.count)}`}>
                         <span className="bar-chart-count">{m.count || ""}</span>
                         <div
-                          className={`bar-chart-bar${m.count === 0 ? " zero" : ""}${m.count === chartMax && chartMax > 0 ? " peak" : ""}`}
+                          className="bar-chart-bar"
                           style={{ height: m.count === 0 ? "4px" : `${Math.max(10, (m.count / chartMax) * 100)}%` }}
                           title={`${m.count} bookings`}
                         />

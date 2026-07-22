@@ -97,8 +97,8 @@ export default function DashboardPage() {
             <ul className="dash-nav">
               <li><a href="#" className={`dash-link${tab === "applications" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("applications"); }}><img src="/icons/documents.png" alt="" className="icon-img-sm" /> My Applications</a></li>
               <li><a href="#" className={`dash-link${tab === "saved" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("saved"); }}><img src="/icons/heart.png" alt="" className="icon-img-sm" /> Saved Pets</a></li>
-              <li><a href="#" className={`dash-link${tab === "messages" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("messages"); }}>💬 Messages</a></li>
-              <li><a href="#" className={`dash-link${tab === "settings" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("settings"); }}>⚙️ Settings</a></li>
+              <li><a href="#" className={`dash-link${tab === "messages" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("messages"); }}><img src="/icons/message.png" alt="" className="icon-img-sm" /> Messages</a></li>
+              <li><a href="#" className={`dash-link${tab === "settings" ? " active" : ""}`} onClick={(e) => { e.preventDefault(); setTab("settings"); }}><img src="/icons/setting.png" alt="" className="icon-img-sm" /> Settings</a></li>
             </ul>
             <ul className="dash-nav dash-nav-footer">
               <li>
@@ -186,7 +186,7 @@ export default function DashboardPage() {
                     </div>
                   </li>
                   <li className="message-item">
-                    <div className="message-avatar">🩺</div>
+                    <div className="message-avatar"><img src="/icons/assessment.png" alt="" /></div>
                     <div>
                       <strong>Vet Care Team</strong>
                       <p>A reminder that Biscuit&apos;s next check-up is coming up. Let us know if you&apos;d like to reschedule.</p>

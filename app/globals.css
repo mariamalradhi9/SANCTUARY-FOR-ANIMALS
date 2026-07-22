@@ -260,21 +260,42 @@ section { padding: 64px 0; }
 /* ---------------------------------- Footer ---------------------------------- */
 
 .site-footer {
-  background: var(--color-secondary-dark);
+  position: relative;
+  background: linear-gradient(rgba(20, 22, 20, 0.8), rgba(20, 22, 20, 0.8)), url("/img/background.png") center/cover no-repeat fixed;
   color: #d9e3e0;
-  padding: 56px 0 24px;
+  padding: 72px 0 24px;
   margin-top: 80px;
 }
 .footer-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 32px;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
-.footer-grid h4 { color: #fff; margin-bottom: 16px; font-size: 1rem; }
-.footer-grid ul li { margin-bottom: 10px; }
+.footer-grid h4 {
+  color: #fff;
+  margin-bottom: 22px;
+  font-size: 1.3rem;
+  font-style: italic;
+  font-weight: 500;
+}
+.footer-grid ul li { margin-bottom: 14px; }
 .footer-grid ul li a:hover { color: var(--color-primary); }
+.footer-about { color: #a9b8b5; margin: 14px 0 18px; line-height: 1.6; }
+.footer-accent-link {
+  color: var(--color-primary);
+  border-bottom: 1px dashed var(--color-primary);
+  padding-bottom: 2px;
+}
+.footer-contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.footer-contact-icon { flex-shrink: 0; width: 18px; text-align: center; opacity: 0.8; }
 .footer-bottom {
+  position: relative;
   border-top: 1px solid rgba(255,255,255,0.12);
   padding-top: 20px;
   display: flex;
@@ -1388,38 +1409,28 @@ textarea { resize: vertical; min-height: 100px; }
   padding: 24px;
   box-shadow: var(--shadow-sm);
   overflow: hidden;
-}
-.admin-stat::after {
-  content: "";
-  position: absolute;
-  bottom: -30px;
-  right: -30px;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: var(--color-cream);
-  z-index: 0;
+  border: 1px solid var(--color-border);
+  text-align: center;
 }
 .admin-stat > * { position: relative; z-index: 1; }
-.admin-stat-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-}
-.admin-stat-head span:first-child { font-weight: 600; color: var(--color-text-muted); font-size: 0.88rem; }
-.admin-stat-icon {
-  width: 42px;
-  height: 42px;
+.admin-stat-corner {
+  position: absolute;
+  bottom: -22px;
+  right: -22px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  background: var(--color-cream);
+  background: linear-gradient(135deg, var(--color-cream), var(--color-bg-alt));
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
+  z-index: 0;
 }
-.admin-stat-icon img { width: 22px; height: 22px; }
-.admin-stat h2 { font-size: 2.2rem; margin-bottom: 12px; }
+.admin-stat-corner img { width: 42px; height: 42px; opacity: 0.9; margin-bottom: 18px; margin-right: 18px; }
+.admin-stat-head { margin-bottom: 18px; }
+.admin-stat-head span:first-child { font-weight: 600; color: var(--color-text-muted); font-size: 0.88rem; }
+.admin-stat h2 { font-size: 2.6rem; margin-bottom: 12px; }
 .admin-stat a { font-weight: 700; font-size: 0.85rem; color: var(--color-primary); }
 .admin-stat a:hover { text-decoration: underline; }
 
@@ -1690,6 +1701,18 @@ textarea { resize: vertical; min-height: 100px; }
   pointer-events: none;
 }
 .bar-chart-gridlines span { display: block; border-top: 1px dashed var(--color-border); }
+.bar-chart-trend {
+  position: absolute;
+  top: 28px;
+  left: 16px;
+  right: 16px;
+  bottom: 48px;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
+.bar-chart-trend-line { fill: none; stroke: var(--color-secondary); stroke-width: 1.4; stroke-dasharray: 3 2.5; vector-effect: non-scaling-stroke; }
+.bar-chart-trend-dot { fill: var(--color-white); stroke: var(--color-secondary); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
 .bar-chart-col {
   position: relative;
   flex: 0 1 76px;
@@ -1708,18 +1731,32 @@ textarea { resize: vertical; min-height: 100px; }
   gap: 8px;
   width: 100%;
 }
-.bar-chart-count { font-size: 0.8rem; font-weight: 700; color: var(--color-text); min-height: 1.1em; }
+.bar-chart-count {
+  font-size: 0.76rem;
+  font-weight: 700;
+  min-height: 1.1em;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-cream);
+  color: var(--color-text);
+}
 .bar-chart-bar {
   width: 40px;
   min-height: 4px;
   border-radius: 10px 10px 3px 3px;
-  background: linear-gradient(180deg, #f5a065, var(--color-primary-dark));
-  box-shadow: 0 4px 10px rgba(217, 111, 44, 0.25);
+  background: var(--color-border);
+  box-shadow: none;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.bar-chart-bar:hover { transform: scaleX(1.12); box-shadow: 0 6px 14px rgba(217, 111, 44, 0.35); }
-.bar-chart-bar.peak { background: linear-gradient(180deg, var(--color-primary), var(--color-primary-dark)); }
-.bar-chart-bar.zero { background: var(--color-border); box-shadow: none; }
+.bar-chart-bar:hover { transform: scaleX(1.12); }
+.bar-chart-bar-wrap.low .bar-chart-count { background: rgba(224, 165, 49, 0.16); color: var(--color-warning); }
+.bar-chart-bar-wrap.low .bar-chart-bar { background: linear-gradient(180deg, #f0d9a0, var(--color-warning)); box-shadow: 0 4px 10px rgba(224, 165, 49, 0.25); }
+.bar-chart-bar-wrap.mid .bar-chart-count { background: rgba(239, 133, 65, 0.16); color: var(--color-primary); }
+.bar-chart-bar-wrap.mid .bar-chart-bar { background: linear-gradient(180deg, #f5a065, var(--color-primary)); box-shadow: 0 4px 10px rgba(239, 133, 65, 0.28); }
+.bar-chart-bar-wrap.high .bar-chart-count { background: rgba(217, 111, 44, 0.18); color: var(--color-primary-dark); }
+.bar-chart-bar-wrap.high .bar-chart-bar { background: linear-gradient(180deg, var(--color-primary), var(--color-primary-dark)); box-shadow: 0 4px 10px rgba(217, 111, 44, 0.3); }
+.bar-chart-bar-wrap.peak .bar-chart-count { background: rgba(209, 88, 74, 0.18); color: var(--color-danger); }
+.bar-chart-bar-wrap.peak .bar-chart-bar { background: linear-gradient(180deg, var(--color-primary-dark), var(--color-danger)); box-shadow: 0 6px 14px rgba(209, 88, 74, 0.32); }
 .bar-chart-label {
   font-size: 0.78rem;
   color: var(--color-text-muted);
