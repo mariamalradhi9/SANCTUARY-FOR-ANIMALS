@@ -1213,14 +1213,15 @@ textarea { resize: vertical; min-height: 100px; }
 .product-photo img { width: 100%; height: 100%; object-fit: cover; }
 .product-category-badge { margin-bottom: 8px; display: inline-block; }
 .product-price { font-weight: 800; color: var(--color-primary); font-size: 1.1rem; margin-bottom: 12px; }
-.product-qty-row { display: flex; align-items: center; gap: 10px; }
+.product-qty-row { display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
 .qty-stepper {
   display: flex;
   align-items: center;
+  justify-content: center;
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-pill);
   overflow: hidden;
-  flex-shrink: 0;
+  align-self: center;
 }
 .qty-stepper button {
   width: 30px;
@@ -1233,7 +1234,7 @@ textarea { resize: vertical; min-height: 100px; }
 }
 .qty-stepper button:hover { background: var(--color-cream); }
 .qty-stepper span { width: 28px; text-align: center; font-weight: 700; font-size: 0.85rem; }
-.product-qty-row .btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
+.product-qty-row .btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; box-sizing: border-box; }
 
 .cart-panel {
   background: var(--color-white);
@@ -1857,7 +1858,14 @@ textarea { resize: vertical; min-height: 100px; }
 
 /* ---- page header banner with decorative illustration ---- */
 
-.page-banner { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; background: var(--color-bg); }
+.unified-page-card { padding: 0; overflow: hidden; }
+.page-banner-strip { background: var(--color-bg); padding: 28px; border-bottom: 1px solid var(--color-border); }
+.unified-page-card .pill-filter-bar { padding: 20px 28px 0; margin-bottom: 20px; }
+.unified-page-card .table-scroll { padding: 0 28px 24px; }
+.unified-page-card .admin-empty { padding: 8px 28px 28px; }
+.unified-page-card .tip-banner { margin: 4px 28px 28px; }
+
+.page-banner { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .page-banner-copy { display: flex; align-items: center; gap: 18px; flex: 1; min-width: 240px; }
 .page-banner-icon {
   width: 56px;

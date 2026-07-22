@@ -86,24 +86,26 @@ export default function AdminApplicationsPage() {
           <div className="container">
             <div className={`admin-toast${show ? " show" : ""}`}>{message}</div>
 
-            <div className="admin-card page-banner">
-              <div className="page-banner-copy">
-                <div className="page-banner-icon"><img src="/icons/documents.png" alt="" /></div>
-                <div>
-                  <h1>Adoption Applications</h1>
-                  <p>Review incoming adoption requests and update their status.</p>
+            <div className="admin-card unified-page-card">
+              <div className="page-banner-strip">
+                <div className="page-banner">
+                  <div className="page-banner-copy">
+                    <div className="page-banner-icon"><img src="/icons/documents.png" alt="" /></div>
+                    <div>
+                      <h1>Adoption Applications</h1>
+                      <p>Review incoming adoption requests and update their status.</p>
+                    </div>
+                  </div>
+                  <img className="page-banner-illustration" src="/img/application.png" alt="" />
+                  <select className="page-banner-filter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                    <option value="">All statuses</option>
+                    <option value="Pending Review">Pending Review</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Declined">Declined</option>
+                  </select>
                 </div>
               </div>
-              <img className="page-banner-illustration" src="/img/application.png" alt="" />
-              <select className="page-banner-filter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                <option value="">All statuses</option>
-                <option value="Pending Review">Pending Review</option>
-                <option value="Approved">Approved</option>
-                <option value="Declined">Declined</option>
-              </select>
-            </div>
 
-            <div className="admin-card">
               <div className="pill-filter-bar">
                 <button type="button" className={`pill-filter-btn${statusFilter === "" ? " active" : ""}`} onClick={() => setStatusFilter("")}>
                   <img src="/icons/documents.png" alt="" /> All
@@ -168,13 +170,13 @@ export default function AdminApplicationsPage() {
                   </table>
                 </div>
               )}
-            </div>
 
-            <div className="admin-card tip-banner">
-              <div className="tip-banner-icon"><img src="/icons/heart.png" alt="" /></div>
-              <div className="tip-banner-copy">
-                <h4>Quick Tip</h4>
-                <p>Review applications promptly and schedule pickups as soon as you approve — adopters are waiting to bring their new companion home.</p>
+              <div className="tip-banner">
+                <div className="tip-banner-icon"><img src="/icons/heart.png" alt="" /></div>
+                <div className="tip-banner-copy">
+                  <h4>Quick Tip</h4>
+                  <p>Review applications promptly and schedule pickups as soon as you approve — adopters are waiting to bring their new companion home.</p>
+                </div>
               </div>
             </div>
           </div>

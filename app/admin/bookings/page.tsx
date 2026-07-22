@@ -98,26 +98,29 @@ export default function AdminBookingsPage() {
           <div className="container">
             <div className={`admin-toast${show ? " show" : ""}`}>{message}</div>
 
-            <div className="admin-card page-banner">
-              <div className="page-banner-copy">
-                <div className="page-banner-icon"><img src="/icons/calendar.png" alt="" /></div>
-                <div>
-                  <h1>Booking Requests</h1>
-                  <p>Review and manage all incoming walk, playtime and grooming bookings.</p>
+            <div className="admin-card unified-page-card">
+              <div className="page-banner-strip">
+                <div className="page-banner">
+                  <div className="page-banner-copy">
+                    <div className="page-banner-icon"><img src="/icons/calendar.png" alt="" /></div>
+                    <div>
+                      <h1>Booking Requests</h1>
+                      <p>Review and manage all incoming walk, playtime and grooming bookings.</p>
+                    </div>
+                  </div>
+                  <img className="page-banner-illustration" src="/img/booking.png" alt="" />
+                  <select className="page-banner-filter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                    <option value="">All statuses</option>
+                    <option value="Requested">Requested</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
                 </div>
               </div>
-              <img className="page-banner-illustration" src="/img/booking.png" alt="" />
-              <select className="page-banner-filter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                <option value="">All statuses</option>
-                <option value="Requested">Requested</option>
-                <option value="Confirmed">Confirmed</option>
-                <option value="Completed">Completed</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
-              
-              <br /><br />
-              
-              <button type="button" className={`pill-filter-btn${activityFilter === "" ? " active" : ""}`} onClick={() => setActivityFilter("")}>
+
+              <div className="pill-filter-bar">
+                <button type="button" className={`pill-filter-btn${activityFilter === "" ? " active" : ""}`} onClick={() => setActivityFilter("")}>
                   <img src="/icons/pets.png" alt="" /> All
                 </button>
                 {(["walk", "play", "groom"] as const).map((a) => (
@@ -130,7 +133,6 @@ export default function AdminBookingsPage() {
                     <img src={ACTIVITY_ICONS[a]} alt="" /> {ACTIVITY_LABELS[a]}
                   </button>
                 ))}
-
                 <input
                   type="text"
                   className="pill-filter-search"
@@ -138,12 +140,7 @@ export default function AdminBookingsPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-            </div>
-
-            <div className="admin-card">
-              {/* <div className="pill-filter-bar">
-                
-              </div> */}
+              </div>
 
               {list.length === 0 ? (
                 <p className="admin-empty">No booking requests match your filters.</p>
@@ -199,13 +196,13 @@ export default function AdminBookingsPage() {
                   </table>
                 </div>
               )}
-            </div>
 
-            <div className="admin-card tip-banner">
-              <div className="tip-banner-icon"><img src="/icons/heart.png" alt="" /></div>
-              <div className="tip-banner-copy">
-                <h4>Quick Tip</h4>
-                <p>Respond to booking requests promptly to provide the best experience for our visitors and ensure smooth operations.</p>
+              <div className="tip-banner">
+                <div className="tip-banner-icon"><img src="/icons/heart.png" alt="" /></div>
+                <div className="tip-banner-copy">
+                  <h4>Quick Tip</h4>
+                  <p>Respond to booking requests promptly to provide the best experience for our visitors and ensure smooth operations.</p>
+                </div>
               </div>
             </div>
           </div>

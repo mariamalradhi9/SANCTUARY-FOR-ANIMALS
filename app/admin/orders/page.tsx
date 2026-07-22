@@ -9,7 +9,7 @@ import { readyOrderForPickup, setOrderStatus } from "@/lib/admin/bookingActions"
 import { badgeClassFor, formatBHD, formatDate, formatTime12 } from "@/lib/format";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
-import type { Order, OrderStatus } from "@/lib/types";
+import type { FulfillmentMethod, Order, OrderStatus } from "@/lib/types";
 
 const DELIVERY_STATUSES: OrderStatus[] = ["Processing", "Shipped", "Out for Delivery", "Delivered"];
 const PICKUP_STATUSES: OrderStatus[] = ["Processing", "Ready for Pickup", "Picked Up"];
@@ -20,6 +20,8 @@ export default function AdminOrdersPage() {
   const { message, show, showToast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
   const [statusFilter, setStatusFilter] = useState("");
+  const [fulfillmentFilter, setFulfillmentFilter] = useState<"" | FulfillmentMethod>("");
+  const [search, setSearch] = useState("");
   const [preparingPickupId, setPreparingPickupId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -50,9 +52,12 @@ export default function AdminOrdersPage() {
   }
 
   const list = useMemo(() => {
-    const all = statusFilter ? orders.filter((o) => o.status === statusFilter) : orders;
+    let all = statusFilter ? orders.filter((o) => o.status === statusFilter) : orders;
+    if (fulfillmentFilter) all = all.filter((o) => (o.fulfillment || "delivery") === fulfillmentFilter);
+    const q = search.trim().toLowerCase();
+    if (q) all = all.filter((o) => o.name.toLowerCase().includes(q) || o.id.toLowerCase().includes(q));
     return all.slice().reverse();
-  }, [orders, statusFilter]);
+  }, [orders, statusFilter, fulfillmentFilter, search]);
 
   return (
     <AuthGuard>
@@ -63,22 +68,46 @@ export default function AdminOrdersPage() {
           <div className="container">
             <div className={`admin-toast${show ? " show" : ""}`}>{message}</div>
 
-            <div className="admin-card">
-              <div className="admin-card-head">
-                <div>
-                  <h3>Shop Orders</h3>
-                  <p style={{ margin: "4px 0 0" }}>Sponsorship supply orders placed by donors through the shop.</p>
+            <div className="admin-card unified-page-card">
+              <div className="page-banner-strip">
+                <div className="page-banner">
+                  <div className="page-banner-copy">
+                    <div className="page-banner-icon"><img src="/icons/cart.png" alt="" /></div>
+                    <div>
+                      <h1>Shop Orders</h1>
+                      <p>Sponsorship supply orders placed by donors through the shop.</p>
+                    </div>
+                  </div>
+                  <select className="page-banner-filter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                    <option value="">All statuses</option>
+                    {ALL_STATUSES.map((s) => (
+                      <option value={s} key={s}>{s}</option>
+                    ))}
+                  </select>
                 </div>
-                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                  <option value="">All statuses</option>
-                  {ALL_STATUSES.map((s) => (
-                    <option value={s} key={s}>{s}</option>
-                  ))}
-                </select>
+              </div>
+
+              <div className="pill-filter-bar">
+                <button type="button" className={`pill-filter-btn${fulfillmentFilter === "" ? " active" : ""}`} onClick={() => setFulfillmentFilter("")}>
+                  <img src="/icons/pets.png" alt="" /> All
+                </button>
+                <button type="button" className={`pill-filter-btn${fulfillmentFilter === "delivery" ? " active" : ""}`} onClick={() => setFulfillmentFilter("delivery")}>
+                  <span aria-hidden>🚚</span> Delivery
+                </button>
+                <button type="button" className={`pill-filter-btn${fulfillmentFilter === "pickup" ? " active" : ""}`} onClick={() => setFulfillmentFilter("pickup")}>
+                  <span aria-hidden>🏬</span> Pickup
+                </button>
+                <input
+                  type="text"
+                  className="pill-filter-search"
+                  placeholder="Search orders…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
               </div>
 
               {list.length === 0 ? (
-                <p className="admin-empty">No shop orders {statusFilter ? "with this status " : ""}yet.</p>
+                <p className="admin-empty">No shop orders match your filters.</p>
               ) : (
                 <div className="table-scroll">
                   <table className="admin-table">
@@ -123,6 +152,14 @@ export default function AdminOrdersPage() {
                   </table>
                 </div>
               )}
+
+              <div className="tip-banner">
+                <div className="tip-banner-icon"><img src="/icons/heart.png" alt="" /></div>
+                <div className="tip-banner-copy">
+                  <h4>Quick Tip</h4>
+                  <p>Keep order statuses up to date — donors can see live tracking on their dashboard as soon as you update it here.</p>
+                </div>
+              </div>
             </div>
           </div>
         </main>
