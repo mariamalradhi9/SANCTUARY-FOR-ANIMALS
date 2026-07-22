@@ -129,17 +129,17 @@ export default function AdminBookingsPage() {
                     <img src={ACTIVITY_ICONS[a]} alt="" /> {ACTIVITY_LABELS[a]}
                   </button>
                 ))}
-                <input
+                
+            </div>
+
+            <div className="admin-card">
+              <input
                   type="text"
                   className="pill-filter-search"
                   placeholder="Search bookings…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-            </div>
-
-            <div className="admin-card">
-              
               </div>
 
               {list.length === 0 ? (
