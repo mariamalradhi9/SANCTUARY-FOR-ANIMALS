@@ -18,6 +18,7 @@ const ACTIVITY_LABELS: Record<string, string> = { walk: "Walk", play: "Playtime"
 const AGGRESSION_BADGE: Record<string, string> = { Low: "badge-success", Medium: "badge-warning", High: "badge-danger", Severe: "badge-danger" };
 const SPECIES_LABEL: Record<string, string> = { dog: "Dogs", cat: "Cats", rabbit: "Rabbits" };
 const SPECIES_COLOR: Record<string, string> = { dog: "var(--color-secondary)", cat: "var(--color-primary)", rabbit: "var(--color-warning)" };
+const SPECIES_GRADIENT: Record<string, string> = { dog: "url(#donut-dog)", cat: "url(#donut-cat)", rabbit: "url(#donut-rabbit)" };
 
 function initials(name: string) {
   return (name || "?").trim().charAt(0).toUpperCase();
@@ -122,7 +123,7 @@ export default function AdminDashboardPage() {
               <div className="dash-hero-overlay" />
               <div className="dash-hero-copy">
                 <span className="eyebrow">Admin Overview</span>
-                <h1>Welcome back, Admin <span aria-hidden>🐾</span></h1>
+                <h1>Welcome back, Admin</h1>
                 <p>Here&apos;s what&apos;s happening at the sanctuary today.</p>
                 {today && <span className="dash-hero-date">{today}</span>}
               </div>
@@ -177,7 +178,7 @@ export default function AdminDashboardPage() {
               </div>
             )}
 
-            <div className="reports-grid">
+            <div className="reports-grid reports-grid-loose">
               <div className="admin-card">
                 <div className="admin-card-head">
                   <h3><img src="/icons/kennel.png" alt="" className="icon-img-md" /> Kennel Safety Overview</h3>
@@ -232,13 +233,29 @@ export default function AdminDashboardPage() {
                 ) : (
                   <div className="donut-chart-wrap">
                     <svg viewBox="0 0 100 100" className="donut-chart">
+                      <defs>
+                        <linearGradient id="donut-dog" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="color-mix(in srgb, var(--color-secondary) 55%, white)" />
+                          <stop offset="100%" stopColor="var(--color-secondary)" />
+                        </linearGradient>
+                        <linearGradient id="donut-cat" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="color-mix(in srgb, var(--color-primary) 55%, white)" />
+                          <stop offset="100%" stopColor="var(--color-primary)" />
+                        </linearGradient>
+                        <linearGradient id="donut-rabbit" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="color-mix(in srgb, var(--color-warning) 55%, white)" />
+                          <stop offset="100%" stopColor="var(--color-warning)" />
+                        </linearGradient>
+                      </defs>
                       <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-cream)" strokeWidth="14" />
+                      <circle cx="50" cy="50" r="33" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="1" />
                       {speciesBreakdown.map((seg) => (
                         <circle
                           key={seg.species}
                           cx="50" cy="50" r="40" fill="none"
-                          stroke={seg.color}
+                          stroke={SPECIES_GRADIENT[seg.species] || seg.color}
                           strokeWidth="14"
+                          strokeLinecap="round"
                           strokeDasharray={seg.dasharray}
                           strokeDashoffset={seg.dashoffset}
                           transform="rotate(-90 50 50)"

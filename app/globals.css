@@ -1688,8 +1688,8 @@ textarea { resize: vertical; min-height: 100px; }
   z-index: 1;
   background: linear-gradient(90deg, rgba(253, 246, 236, 0.94) 0%, rgba(253, 246, 236, 0.6) 42%, rgba(253, 246, 236, 0.05) 72%);
 }
-.dash-hero-copy { position: relative; z-index: 2; padding: 32px; max-width: 460px; }
-.dash-hero-copy h1 { display: flex; align-items: center; gap: 10px; margin: 10px 0 6px; }
+.dash-hero-copy { position: relative; z-index: 2; padding: 32px; max-width: 620px; }
+.dash-hero-copy h1 { white-space: nowrap; margin: 10px 0 6px; }
 .dash-hero-date {
   display: inline-block;
   margin-top: 14px;
@@ -1719,6 +1719,7 @@ textarea { resize: vertical; min-height: 100px; }
 @media (max-width: 640px) {
   .dash-hero-quote { display: none; }
   .dash-hero-copy { padding: 24px; max-width: none; }
+  .dash-hero-copy h1 { white-space: normal; }
   .dash-hero-overlay { background: rgba(253, 246, 236, 0.85); }
 }
 
@@ -1871,7 +1872,7 @@ textarea { resize: vertical; min-height: 100px; }
 .page-banner-icon img { width: 26px; height: 26px; }
 .page-banner-copy h1 { margin-bottom: 4px; }
 .page-banner-copy p { margin: 0; color: var(--color-text-muted); }
-.page-banner-illustration { width: 130px; height: 100px; object-fit: contain; opacity: 0.9; }
+.page-banner-illustration { width: 220px; height: 150px; object-fit: contain; opacity: 0.95; }
 .page-banner-filter { width: auto; padding: 10px 18px; font-weight: 700; }
 @media (max-width: 860px) {
   .page-banner-illustration { display: none; }
@@ -2086,6 +2087,7 @@ textarea { resize: vertical; min-height: 100px; }
   margin-bottom: 28px;
 }
 .reports-grid .admin-card { margin-bottom: 0; height: 100%; }
+.reports-grid-loose .admin-card { height: auto; }
 
 .report-notes { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .report-notes li { font-size: 0.9rem; color: var(--color-text-muted); padding-left: 4px; }
@@ -2129,7 +2131,7 @@ textarea { resize: vertical; min-height: 100px; }
 /* ---- animals-by-type donut chart ---- */
 
 .donut-chart-wrap { position: relative; width: 200px; height: 200px; margin: 8px auto 16px; }
-.donut-chart { width: 100%; height: 100%; }
+.donut-chart { width: 100%; height: 100%; filter: drop-shadow(0 8px 14px rgba(43, 38, 32, 0.16)); }
 .donut-chart circle { transition: stroke-dasharray 0.4s ease; }
 .donut-chart-center {
   position: absolute;
@@ -2349,9 +2351,15 @@ textarea { resize: vertical; min-height: 100px; }
   padding: 32px 24px;
   text-align: center;
   box-shadow: var(--shadow-sm);
+  border-top: 4px solid var(--color-primary);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.step-card:nth-child(2) .step-icon { background: color-mix(in srgb, var(--color-secondary) 16%, var(--color-white)); }
-.step-card:nth-child(3) .step-icon { background: color-mix(in srgb, var(--color-primary) 16%, var(--color-white)); }
+.step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.step-card:nth-child(2) { border-top-color: var(--color-secondary); }
+.step-card:nth-child(3) { border-top-color: var(--color-warning); }
+.step-card .step-icon { background: color-mix(in srgb, var(--color-primary) 22%, var(--color-white)); }
+.step-card:nth-child(2) .step-icon { background: color-mix(in srgb, var(--color-secondary) 22%, var(--color-white)); }
+.step-card:nth-child(3) .step-icon { background: color-mix(in srgb, var(--color-warning) 22%, var(--color-white)); }
 .step-icon {
   width: 64px;
   height: 64px;
