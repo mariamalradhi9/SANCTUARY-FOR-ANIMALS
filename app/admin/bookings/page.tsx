@@ -115,8 +115,7 @@ export default function AdminBookingsPage() {
                 <option value="Cancelled">Cancelled</option>
               </select>
 
-              <div className="pill-filter-bar">
-                <button type="button" className={`pill-filter-btn${activityFilter === "" ? " active" : ""}`} onClick={() => setActivityFilter("")}>
+              <button type="button" className={`pill-filter-btn${activityFilter === "" ? " active" : ""}`} onClick={() => setActivityFilter("")}>
                   <img src="/icons/pets.png" alt="" /> All
                 </button>
                 {(["walk", "play", "groom"] as const).map((a) => (
@@ -129,11 +128,11 @@ export default function AdminBookingsPage() {
                     <img src={ACTIVITY_ICONS[a]} alt="" /> {ACTIVITY_LABELS[a]}
                   </button>
                 ))}
-                
             </div>
 
             <div className="admin-card">
-              <input
+              <div className="pill-filter-bar">
+                <input
                   type="text"
                   className="pill-filter-search"
                   placeholder="Search bookings…"
