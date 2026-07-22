@@ -5,7 +5,8 @@ import AuthGuard from "@/components/AuthGuard";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 import PetCard from "@/components/site/PetCard";
-import { getAnimals } from "@/lib/animals";
+import { getPublicAnimals, isAnimalAvailable } from "@/lib/animals";
+import { calculateAge } from "@/lib/format";
 import { usePageTitle } from "@/lib/usePageTitle";
 
 type Sort = "name" | "age-asc" | "age-desc";
@@ -21,23 +22,23 @@ export default function SearchPage() {
   const [sort, setSort] = useState<Sort>("name");
   const [applied, setApplied] = useState({ search: "", species: "", size: "", gender: "", maxAge: "", sort: "name" as Sort });
 
-  const animals = useMemo(() => getAnimals(), []);
+  const animals = useMemo(() => getPublicAnimals(), []);
 
   const results = useMemo(() => {
     const { search, species, size, gender, maxAge, sort } = applied;
-    let result = animals.filter((pet) => pet.available !== false).filter((pet) => {
+    let result = animals.filter((pet) => isAnimalAvailable(pet)).filter((pet) => {
       if (search && !pet.name.toLowerCase().includes(search) && !pet.breed.toLowerCase().includes(search)) return false;
       if (species && pet.species !== species) return false;
       if (size && pet.size !== size) return false;
       if (gender && pet.gender !== gender) return false;
-      if (maxAge && pet.age >= Number(maxAge)) return false;
+      if (maxAge && calculateAge(pet.dob) >= Number(maxAge)) return false;
       return true;
     });
 
     result = result.slice();
     if (sort === "name") result.sort((a, b) => a.name.localeCompare(b.name));
-    if (sort === "age-asc") result.sort((a, b) => a.age - b.age);
-    if (sort === "age-desc") result.sort((a, b) => b.age - a.age);
+    if (sort === "age-asc") result.sort((a, b) => calculateAge(a.dob) - calculateAge(b.dob));
+    if (sort === "age-desc") result.sort((a, b) => calculateAge(b.dob) - calculateAge(a.dob));
     return result;
   }, [animals, applied]);
 

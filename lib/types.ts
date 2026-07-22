@@ -23,11 +23,12 @@ export interface Animal {
   emoji: string;
   img: string;
   breed: string;
-  age: number;
+  dob: string;
   size: Size;
   gender: Gender;
   tag: string;
   available: boolean;
+  hidden?: boolean;
   desc: string;
 
   // Onboarding / intake fields (26-field requirement set)

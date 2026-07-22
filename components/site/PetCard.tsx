@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Animal } from "@/lib/types";
+import { calculateAge } from "@/lib/format";
 import FavButton from "./FavButton";
 
 /** `tagOverride` exists because the original index.html hardcodes the species
@@ -9,7 +10,8 @@ import FavButton from "./FavButton";
  * rather than "fixed", since the brief was pixel parity, not a redesign. */
 export default function PetCard({ pet, tagOverride }: { pet: Animal; tagOverride?: string }) {
   const tag = tagOverride ?? pet.tag;
-  const ageLabel = pet.age < 1 ? `${Math.round(pet.age * 12)} mo` : `${pet.age} yrs`;
+  const age = calculateAge(pet.dob);
+  const ageLabel = age < 1 ? `${Math.round(age * 12)} mo` : `${age} yrs`;
   const genderLabel = pet.gender === "male" ? "Male" : "Female";
 
   return (

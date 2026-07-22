@@ -7,8 +7,9 @@ import AnimalFormModal, { type AnimalFormData } from "@/components/admin/AnimalF
 import AnimalHistoryModal from "@/components/admin/AnimalHistoryModal";
 import AnimalViewModal from "@/components/admin/AnimalViewModal";
 import ConfirmModal from "@/components/ConfirmModal";
-import { addAnimal, deleteAnimal, getAnimals, updateAnimal } from "@/lib/animals";
+import { addAnimal, deleteAnimal, getAnimals, isAnimalAvailable, updateAnimal } from "@/lib/animals";
 import { logAudit } from "@/lib/admin/audit";
+import { calculateAge } from "@/lib/format";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Animal, Species } from "@/lib/types";
@@ -16,6 +17,7 @@ import type { Animal, Species } from "@/lib/types";
 const NO_PHOTO_IMG = "/icons/paw.png";
 
 type AvailFilter = "" | "available" | "unavailable";
+type VisibilityFilter = "" | "visible" | "hidden";
 
 export default function AdminAnimalsPage() {
   usePageTitle("Animals — Admin — Aamal Almoayyed Sanctuary");
@@ -25,6 +27,7 @@ export default function AdminAnimalsPage() {
   const [search, setSearch] = useState("");
   const [species, setSpecies] = useState<"" | Species>("");
   const [avail, setAvail] = useState<AvailFilter>("");
+  const [visibility, setVisibility] = useState<VisibilityFilter>("");
 
   const [formOpen, setFormOpen] = useState(false);
   const [editingAnimal, setEditingAnimal] = useState<Animal | null>(null);
@@ -43,8 +46,17 @@ export default function AdminAnimalsPage() {
     if (species) list = list.filter((a) => a.species === species);
     if (avail === "available") list = list.filter((a) => a.available !== false);
     if (avail === "unavailable") list = list.filter((a) => a.available === false);
+    if (visibility === "visible") list = list.filter((a) => !a.hidden);
+    if (visibility === "hidden") list = list.filter((a) => a.hidden);
     return list;
-  }, [animals, search, species, avail]);
+  }, [animals, search, species, avail, visibility]);
+
+  function toggleHidden(a: Animal) {
+    updateAnimal(a.id, { hidden: !a.hidden });
+    logAudit("animal-update", `${a.name} was ${a.hidden ? "unhidden" : "hidden"} from the public site.`);
+    showToast(`${a.name} is now ${a.hidden ? "visible" : "hidden"} on the public site.`);
+    setAnimals(getAnimals());
+  }
 
   function openAddModal() {
     setEditingAnimal(null);
@@ -109,6 +121,11 @@ export default function AdminAnimalsPage() {
                 <option value="available">Available</option>
                 <option value="unavailable">Not Available</option>
               </select>
+              <select value={visibility} onChange={(e) => setVisibility(e.target.value as VisibilityFilter)}>
+                <option value="">All (visible + hidden)</option>
+                <option value="visible">Visible on site</option>
+                <option value="hidden">Hidden</option>
+              </select>
               <button type="button" className="btn btn-primary" onClick={openAddModal}>+ Add Animal</button>
             </div>
 
@@ -122,14 +139,15 @@ export default function AdminAnimalsPage() {
                     <div className="card animal-card" key={a.id}>
                       <div className="photo-wrap">
                         <img src={a.img || NO_PHOTO_IMG} alt={a.name} />
-                        <span className={`animal-status-badge ${a.available !== false ? "available" : "unavailable"}`}>
-                          {a.available !== false ? "Available" : "Not Available"}
+                        <span className={`animal-status-badge ${isAnimalAvailable(a) ? "available" : "unavailable"}`}>
+                          {isAnimalAvailable(a) ? "Available" : "Not Available"}
                         </span>
+                        {a.hidden && <span className="animal-hidden-badge">Hidden</span>}
                       </div>
                       <div className="info">
                         <h3>{a.name}</h3>
                         <div className="meta">
-                          <span>{a.species.charAt(0).toUpperCase() + a.species.slice(1)} · {a.breed}</span> · <span>{a.age} {a.age === 1 ? "year" : "years"}</span>
+                          <span>{a.species.charAt(0).toUpperCase() + a.species.slice(1)} · {a.breed}</span> · <span>{calculateAge(a.dob)} {calculateAge(a.dob) === 1 ? "year" : "years"}</span>
                         </div>
                         <div className="animal-tags">
                           {tags.map((t) => <span key={t}>{t}</span>)}
@@ -139,6 +157,7 @@ export default function AdminAnimalsPage() {
                           <button type="button" className="btn btn-outline" onClick={() => openEditModal(a)}>Edit</button>
                           <a href={`/admin/assessment?pet=${a.id}`} className="btn btn-ghost"><img src="/icons/assessment.png" alt="" className="icon-img-sm" /> Assessment</a>
                           <button type="button" className="btn btn-ghost" onClick={() => setHistoryPetId(a.id)}><img src="/icons/history.png" alt="" className="icon-img-sm" /> History</button>
+                          <button type="button" className="btn btn-ghost" onClick={() => toggleHidden(a)}>{a.hidden ? "Show" : "Hide"}</button>
                           <button type="button" className="btn btn-ghost" style={{ color: "var(--color-danger)", borderColor: "var(--color-danger)" }} onClick={() => setDeleteTarget(a)}>Delete</button>
                         </div>
                       </div>

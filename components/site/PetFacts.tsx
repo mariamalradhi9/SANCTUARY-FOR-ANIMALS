@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Animal, Assessment } from "@/lib/types";
 import { getLatestAssessment } from "@/lib/records";
 import { yesNoLabel } from "@/lib/petProfile";
+import { ageLabel as formatAgeLabel } from "@/lib/format";
 
 export default function PetFacts({ pet }: { pet: Animal }) {
   const [assessment, setAssessment] = useState<Assessment | null>(null);
@@ -12,7 +13,7 @@ export default function PetFacts({ pet }: { pet: Animal }) {
     setAssessment(getLatestAssessment(pet.id));
   }, [pet.id]);
 
-  const ageLabel = pet.age < 1 ? `${Math.round(pet.age * 12)} months` : `${pet.age} years`;
+  const ageLabel = formatAgeLabel(pet.dob);
   const sizeLabel = pet.size.charAt(0).toUpperCase() + pet.size.slice(1);
   const genderLabel = assessment?.sex ? (assessment.sex === "M" ? "Male" : "Female") : pet.gender === "male" ? "Male" : "Female";
   const vaccinatedLabel = yesNoLabel(assessment?.vaccinated, "Yes");

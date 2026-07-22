@@ -8,7 +8,7 @@ interface FormState {
   name: string;
   species: Species;
   breed: string;
-  age: string;
+  dob: string;
   size: Size;
   gender: Gender;
   img: string;
@@ -52,7 +52,7 @@ interface FormState {
 }
 
 const EMPTY_FORM: FormState = {
-  name: "", species: "dog", breed: "", age: "", size: "small", gender: "male", img: "", desc: "", available: true,
+  name: "", species: "dog", breed: "", dob: "", size: "small", gender: "male", img: "", desc: "", available: true,
   onboardingDate: "", govtSupport: "No", govtSupportValue: "",
   aggressionLevel: "", aggressionDetails: "", behaviorDetails: "", medicalStatus: "Healthy", vaccinationStatus: "Up to Date", nutritionStatus: "Good", nextVetCheckDue: "", chipped: "No",
   kennelNumber: "", kennelInCharge: "",
@@ -65,7 +65,7 @@ const EMPTY_FORM: FormState = {
 function fromAnimal(a: Animal): FormState {
   const adopter = a.adopter || { name: "", mobile: "", email: "", address: "", paidOrFree: "" as const, amountPaid: null };
   return {
-    name: a.name, species: a.species, breed: a.breed, age: String(a.age), size: a.size, gender: a.gender, img: a.img || "", desc: a.desc || "", available: a.available !== false,
+    name: a.name, species: a.species, breed: a.breed, dob: a.dob || "", size: a.size, gender: a.gender, img: a.img || "", desc: a.desc || "", available: a.available !== false,
     onboardingDate: a.onboardingDate || "", govtSupport: a.govtSupport || "No", govtSupportValue: a.govtSupportValue != null ? String(a.govtSupportValue) : "",
     aggressionLevel: a.aggressionLevel || "", aggressionDetails: a.aggressionDetails || "", behaviorDetails: a.behaviorDetails || "",
     medicalStatus: a.medicalStatus || "Healthy", vaccinationStatus: a.vaccinationStatus || "Up to Date", nutritionStatus: a.nutritionStatus || "Good",
@@ -79,7 +79,7 @@ function fromAnimal(a: Animal): FormState {
 }
 
 export interface AnimalFormData {
-  name: string; species: Species; breed: string; age: number; size: Size; gender: Gender; img: string; desc: string; available: boolean;
+  name: string; species: Species; breed: string; dob: string; size: Size; gender: Gender; img: string; desc: string; available: boolean;
   onboardingDate: string; govtSupport: YesNo; govtSupportValue: number | null;
   aggressionLevel: "" | "Low" | "Medium" | "High" | "Severe"; aggressionDetails: string; behaviorDetails: string;
   medicalStatus: "Healthy" | "Under Treatment" | "Chronic Condition" | "Critical";
@@ -118,7 +118,7 @@ export default function AnimalFormModal({ open, animal, onClose, onSave }: {
       name: form.name.trim(),
       species: form.species,
       breed: form.breed.trim(),
-      age: Number(form.age),
+      dob: form.dob,
       size: form.size,
       gender: form.gender,
       img: form.img.trim(),
@@ -188,8 +188,8 @@ export default function AnimalFormModal({ open, animal, onClose, onSave }: {
             <input type="text" id="animalBreed" required value={form.breed} onChange={(e) => set("breed", e.target.value)} />
           </div>
           <div className="field">
-            <label htmlFor="animalAge">Age (years) *</label>
-            <input type="number" id="animalAge" step="0.1" min="0" required value={form.age} onChange={(e) => set("age", e.target.value)} />
+            <label htmlFor="animalDob">Date of Birth *</label>
+            <input type="date" id="animalDob" required max={new Date().toISOString().slice(0, 10)} value={form.dob} onChange={(e) => set("dob", e.target.value)} />
           </div>
         </div>
         <div className="row-2">

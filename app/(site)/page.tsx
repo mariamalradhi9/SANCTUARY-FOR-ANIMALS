@@ -1,14 +1,25 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 import PetCard from "@/components/site/PetCard";
-import { PETS } from "@/lib/animals";
+import { getPublicAnimals, isAnimalAvailable } from "@/lib/animals";
+import type { Animal } from "@/lib/types";
+
+const FEATURED_IDS = ["mateus", "mochi", "biscuit"];
+const FEATURED_TAGS: Record<string, string> = { mateus: "Dog", mochi: "Cat", biscuit: "Rabbit" };
 
 export default function HomePage() {
-  const mateus = PETS.find((p) => p.id === "mateus")!;
-  const mochi = PETS.find((p) => p.id === "mochi")!;
-  const biscuit = PETS.find((p) => p.id === "biscuit")!;
+  const [animals, setAnimals] = useState<Animal[]>([]);
+
+  useEffect(() => {
+    setAnimals(getPublicAnimals());
+  }, []);
+
+  const featured = FEATURED_IDS.map((id) => animals.find((a) => a.id === id)).filter((a): a is Animal => !!a && isAnimalAvailable(a));
 
   return (
     <AuthGuard>
@@ -52,9 +63,9 @@ export default function HomePage() {
             <p>A few of the animals currently waiting for a loving home.</p>
           </div>
           <div className="grid-3">
-            <PetCard pet={mateus} tagOverride="Dog" />
-            <PetCard pet={mochi} tagOverride="Cat" />
-            <PetCard pet={biscuit} tagOverride="Rabbit" />
+            {featured.map((pet) => (
+              <PetCard key={pet.id} pet={pet} tagOverride={FEATURED_TAGS[pet.id]} />
+            ))}
           </div>
           <div style={{ textAlign: "center", marginTop: 36 }}>
             <Link href="/search" className="btn btn-primary">See All Available Pets</Link>

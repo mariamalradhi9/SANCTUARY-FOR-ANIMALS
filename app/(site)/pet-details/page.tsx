@@ -12,12 +12,12 @@ import BehavioralProfile from "@/components/site/BehavioralProfile";
 import PetActivity from "@/components/site/PetActivity";
 import BookingWidget from "@/components/site/BookingWidget";
 import FavButton from "@/components/site/FavButton";
-import { getAnimals } from "@/lib/animals";
+import { getPublicAnimals } from "@/lib/animals";
 import { usePageTitle } from "@/lib/usePageTitle";
 
 function PetDetailsInner() {
   const params = useSearchParams();
-  const animals = getAnimals();
+  const animals = getPublicAnimals();
   const petId = params.get("pet") || animals[0]?.id;
   const pet = animals.find((p) => p.id === petId) || animals[0];
 

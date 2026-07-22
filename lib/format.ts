@@ -29,6 +29,21 @@ export function isOverdue(dateStr?: string): boolean {
   return d !== null && d > 0;
 }
 
+/** Age in years (decimal) computed from a date of birth, e.g. 0.7 for an 8-month-old. */
+export function calculateAge(dob?: string): number {
+  if (!dob) return 0;
+  const birth = new Date(dob + "T00:00:00");
+  if (isNaN(birth.getTime())) return 0;
+  const years = (Date.now() - birth.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+  return Math.max(0, Math.round(years * 10) / 10);
+}
+
+/** "8 months" / "2 years" label matching the age display used across the site. */
+export function ageLabel(dob?: string): string {
+  const age = calculateAge(dob);
+  return age < 1 ? `${Math.round(age * 12)} months` : `${age} years`;
+}
+
 const STATUS_CATEGORY: Record<string, "accepted" | "rejected"> = {
   Approved: "accepted",
   Confirmed: "accepted",

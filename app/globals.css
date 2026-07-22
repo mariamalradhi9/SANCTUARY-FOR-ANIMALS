@@ -1551,6 +1551,18 @@ textarea { resize: vertical; min-height: 100px; }
 }
 .animal-status-badge.available { background: var(--color-secondary); color: #fff; }
 .animal-status-badge.unavailable { background: var(--color-warning); color: #fff; }
+.animal-hidden-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  background: rgba(43, 38, 32, 0.85);
+  color: #fff;
+}
 .animal-card .info { padding: 18px; }
 .animal-tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 16px; }
 .animal-tags span {

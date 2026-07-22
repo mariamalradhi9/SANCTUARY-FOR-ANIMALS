@@ -10,6 +10,7 @@ import PetFacts from "@/components/site/PetFacts";
 import BehavioralProfile from "@/components/site/BehavioralProfile";
 import { getAnimals } from "@/lib/animals";
 import { getApplications, saveApplications } from "@/lib/records";
+import { calculateAge } from "@/lib/format";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Application } from "@/lib/types";
 
@@ -305,7 +306,7 @@ function AdoptInner() {
                     <div className="side-pet-details">
                       <img src={pet.img} alt={pet.name} />
                       <h3>{pet.name}</h3>
-                      <p>{pet.breed} · {pet.age < 1 ? `${Math.round(pet.age * 12)} mo` : `${pet.age} yrs`}</p>
+                      <p>{pet.breed} · {calculateAge(pet.dob) < 1 ? `${Math.round(calculateAge(pet.dob) * 12)} mo` : `${calculateAge(pet.dob)} yrs`}</p>
                       <PetFacts pet={pet} />
                       <BehavioralProfile petId={pet.id} petName={pet.name} />
                     </div>
