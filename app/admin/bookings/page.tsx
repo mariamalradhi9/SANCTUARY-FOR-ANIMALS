@@ -8,7 +8,7 @@ import ArrivalTimeModal from "@/components/admin/ArrivalTimeModal";
 import ActivityLabel from "@/components/ActivityLabel";
 import { getBookings } from "@/lib/records";
 import { applyBookingAction, setBookingArrivalTime, type BookingAction } from "@/lib/admin/bookingActions";
-import { badgeClassFor, formatDate } from "@/lib/format";
+import { badgeClassFor, formatDate, formatTime12 } from "@/lib/format";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Booking } from "@/lib/types";
@@ -48,7 +48,7 @@ export default function AdminBookingsPage() {
     if (b) {
       setBookingArrivalTime(confirmingId, time);
       setBookings(getBookings());
-      showToast(`Booking for ${b.petName} confirmed — arrive by ${time}.`);
+      showToast(`Booking for ${b.petName} confirmed — arrive by ${formatTime12(time)}.`);
     }
     setConfirmingId(null);
   }
@@ -58,7 +58,7 @@ export default function AdminBookingsPage() {
     const b = setBookingArrivalTime(editingArrivalId, time);
     if (b) {
       setBookings(getBookings());
-      showToast(`Arrival time for ${b.petName}'s visit set to ${time}.`);
+      showToast(`Arrival time for ${b.petName}'s visit set to ${formatTime12(time)}.`);
     }
     setEditingArrivalId(null);
   }
@@ -118,7 +118,7 @@ export default function AdminBookingsPage() {
                           <td>
                             {b.arrivalTime ? (
                               <div>
-                                <span>Arrive by {b.arrivalTime}</span><br />
+                                <span>Arrive by {formatTime12(b.arrivalTime)}</span><br />
                                 <button type="button" className="btn btn-ghost btn-sm" style={{ padding: "2px 8px" }} onClick={() => setEditingArrivalId(b.id)}>Edit</button>
                               </div>
                             ) : b.status === "Requested" ? (

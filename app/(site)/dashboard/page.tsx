@@ -13,7 +13,7 @@ import TrackingTimeline, { type TimelineStep } from "@/components/TrackingTimeli
 import { getAnimals } from "@/lib/animals";
 import { getApplications, getBookings, getOrders, latestActivityDate } from "@/lib/records";
 import { getFavorites } from "@/lib/favorites";
-import { badgeClassFor, formatBHD, formatDate, statusCategoryFor } from "@/lib/format";
+import { badgeClassFor, formatBHD, formatDate, formatTime12, statusCategoryFor } from "@/lib/format";
 import { clearSession } from "@/lib/session";
 import { readJSON, writeJSON } from "@/lib/storage";
 import { usePageTitle } from "@/lib/usePageTitle";
@@ -129,7 +129,7 @@ export default function DashboardPage() {
                     <button
                       key={f}
                       type="button"
-                      className={`status-filter-btn${statusFilter === f ? " active" : ""}`}
+                      className={`status-filter-btn status-filter-btn-${f}${statusFilter === f ? " active" : ""}`}
                       onClick={() => setStatusFilter(f)}
                     >
                       {f === "all" ? "All" : f === "accepted" ? "✓ Accepted" : f === "pending" ? "⏳ Pending" : "✕ Rejected"}
@@ -151,12 +151,12 @@ export default function DashboardPage() {
                         </summary>
                         {item.pickupDate && item.pickupTime && (
                           <p className="pickup-notice">
-                            <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Pickup scheduled for <strong>{formatDate(item.pickupDate)}</strong> at <strong>{item.pickupTime}</strong>
+                            <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Pickup scheduled for <strong>{formatDate(item.pickupDate)}</strong> at <strong>{formatTime12(item.pickupTime)}</strong>
                           </p>
                         )}
                         {item.arrivalTime && (
                           <p className="pickup-notice">
-                            <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Please arrive by <strong>{item.arrivalTime}</strong>
+                            <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Please arrive by <strong>{formatTime12(item.arrivalTime)}</strong>
                           </p>
                         )}
                         <TrackingTimeline
@@ -202,7 +202,7 @@ export default function DashboardPage() {
                         </summary>
                         {fulfillment === "pickup" && o.pickupWindowStart && o.pickupWindowEnd && (
                           <p className="pickup-notice">
-                            <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Ready for pickup between <strong>{o.pickupWindowStart}</strong> and <strong>{o.pickupWindowEnd}</strong>
+                            <img src="/icons/calendar.png" alt="" className="icon-img-sm" /> Ready for pickup between <strong>{formatTime12(o.pickupWindowStart)}</strong> and <strong>{formatTime12(o.pickupWindowEnd)}</strong>
                           </p>
                         )}
                         {fulfillment === "delivery" && o.address && (

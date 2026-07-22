@@ -33,6 +33,7 @@ export default function SiteHeader({ active }: { active?: NavKey }) {
             <img src="/icons/cart.png" alt="" />
             <CartBadge />
           </Link>
+          <Link href="/search" className="btn btn-primary btn-sm">Adopt Now</Link>
           <button
             type="button"
             className="btn btn-ghost btn-sm logout-btn"
@@ -43,7 +44,6 @@ export default function SiteHeader({ active }: { active?: NavKey }) {
           >
             <img src="/icons/logout.png" alt="" className="btn-icon" /> Logout
           </button>
-          <Link href="/search" className="btn btn-primary btn-sm">Adopt Now</Link>
         </div>
         <button className="nav-toggle" aria-label="Menu" onClick={() => setOpen((v) => !v)}>
           {open ? "✕" : "☰"}

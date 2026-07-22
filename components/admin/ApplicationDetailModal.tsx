@@ -5,7 +5,7 @@ import Modal from "../Modal";
 import AnimalViewModal from "./AnimalViewModal";
 import SchedulePickupModal from "./SchedulePickupModal";
 import { getAnimals } from "@/lib/animals";
-import { badgeClassFor, formatDate } from "@/lib/format";
+import { badgeClassFor, formatDate, formatTime12 } from "@/lib/format";
 import type { Application } from "@/lib/types";
 
 function ApplicantAvatar({ app, size }: { app: Application; size: number }) {
@@ -94,7 +94,7 @@ export default function ApplicationDetailModal({
             {application.pickupDate && application.pickupTime ? (
               <div className="summary-row">
                 <span>Scheduled for</span>
-                <strong>{formatDate(application.pickupDate)} at {application.pickupTime}</strong>
+                <strong>{formatDate(application.pickupDate)} at {formatTime12(application.pickupTime)}</strong>
               </div>
             ) : (
               <div className="summary-row">

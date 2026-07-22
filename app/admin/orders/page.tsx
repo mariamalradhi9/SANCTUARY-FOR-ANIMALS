@@ -6,7 +6,7 @@ import AdminTopbar from "@/components/admin/AdminTopbar";
 import PickupWindowModal from "@/components/admin/PickupWindowModal";
 import { getOrders } from "@/lib/records";
 import { readyOrderForPickup, setOrderStatus } from "@/lib/admin/bookingActions";
-import { badgeClassFor, formatBHD, formatDate } from "@/lib/format";
+import { badgeClassFor, formatBHD, formatDate, formatTime12 } from "@/lib/format";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Order, OrderStatus } from "@/lib/types";
@@ -44,7 +44,7 @@ export default function AdminOrdersPage() {
     const o = readyOrderForPickup(preparingPickupId, start, end);
     if (o) {
       setOrders(getOrders());
-      showToast(`Order ${o.id} is ready for pickup, ${start}–${end}.`);
+      showToast(`Order ${o.id} is ready for pickup, ${formatTime12(start)}–${formatTime12(end)}.`);
     }
     setPreparingPickupId(null);
   }
@@ -104,7 +104,7 @@ export default function AdminOrdersPage() {
                                 <><br /><span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>{o.address}</span></>
                               )}
                               {fulfillment === "pickup" && o.pickupWindowStart && o.pickupWindowEnd && (
-                                <><br /><span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>{o.pickupWindowStart}–{o.pickupWindowEnd}</span></>
+                                <><br /><span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>{formatTime12(o.pickupWindowStart)}–{formatTime12(o.pickupWindowEnd)}</span></>
                               )}
                             </td>
                             <td>{formatDate(o.date)}</td>

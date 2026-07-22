@@ -17,6 +17,18 @@ export function formatBHD(amount: number): string {
   return `${amount.toFixed(3)} BD`;
 }
 
+/** Converts a 24h "HH:MM" time (as produced by <input type="time">) to 12h "h:MM AM/PM". */
+export function formatTime12(time?: string): string {
+  if (!time) return "—";
+  const [hStr, mStr] = time.split(":");
+  const h = Number(hStr);
+  const m = Number(mStr);
+  if (isNaN(h) || isNaN(m)) return time;
+  const period = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 || 12;
+  return `${h12}:${mStr.padStart(2, "0")} ${period}`;
+}
+
 export function daysSince(dateStr?: string): number | null {
   if (!dateStr) return null;
   const then = new Date(dateStr + "T00:00:00");

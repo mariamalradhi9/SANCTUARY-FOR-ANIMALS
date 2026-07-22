@@ -466,7 +466,7 @@ textarea { resize: vertical; min-height: 100px; }
   max-height: calc(100vh - 116px);
   overflow-y: auto;
 }
-.filter-panel h3 { margin-bottom: 18px; }
+.filter-panel h3 { margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--color-secondary); display: inline-block; }
 
 @media (max-width: 960px) {
   .results-grid { grid-template-columns: 1fr; }
@@ -859,13 +859,17 @@ textarea { resize: vertical; min-height: 100px; }
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 96px;
+  border-top: 4px solid var(--color-secondary);
 }
 .dash-profile { text-align: center; margin-bottom: 24px; }
 .dash-avatar {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: var(--color-cream);
+  background-image: linear-gradient(var(--color-cream), var(--color-cream)), linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 3px solid transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -900,6 +904,8 @@ textarea { resize: vertical; min-height: 100px; }
 }
 .status-filter-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
 .status-filter-btn.active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.status-filter-btn-accepted.active { background: var(--color-secondary); border-color: var(--color-secondary); }
+.status-filter-btn-rejected.active { background: var(--color-danger); border-color: var(--color-danger); }
 
 .profile-photo-field {
   display: flex;
@@ -923,25 +929,34 @@ textarea { resize: vertical; min-height: 100px; }
 
 .dash-nav li { margin-bottom: 4px; }
 .dash-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 12px 14px;
   border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 0.92rem;
   color: var(--color-text-muted);
 }
+.dash-link img { background: color-mix(in srgb, var(--color-secondary) 14%, transparent); padding: 5px; border-radius: 50%; box-sizing: content-box; }
 .dash-link:hover { background: var(--color-bg-alt); }
 .dash-link.active { background: var(--color-primary); color: #fff; }
+.dash-link.active img { background: rgba(255, 255, 255, 0.25); }
 
 .dash-nav-footer { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-border); }
 .dash-nav-footer .dash-link { color: var(--color-danger); }
 .dash-nav-footer .dash-link:hover { background: #fbe8e5; }
+.dash-nav-footer .dash-link img { background: rgba(209, 88, 74, 0.12); }
 
 .dash-content {
   background: var(--color-white);
   border-radius: var(--radius-md);
   padding: 32px;
   box-shadow: var(--shadow-sm);
+  border-top: 4px solid transparent;
+  background-image: linear-gradient(var(--color-white), var(--color-white)), linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   min-height: 420px;
 }
 .dash-panel { display: none; }
@@ -1167,7 +1182,7 @@ textarea { resize: vertical; min-height: 100px; }
   padding: 32px;
   box-shadow: var(--shadow-md);
 }
-.checkout-form-card h3 { margin-top: 28px; }
+.checkout-form-card h3 { margin-top: 28px; padding-bottom: 8px; border-bottom: 2px solid var(--color-secondary); display: inline-block; }
 .checkout-form-card h3:first-child { margin-top: 0; }
 
 .fulfillment-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px; }
@@ -1198,7 +1213,9 @@ textarea { resize: vertical; min-height: 100px; }
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 96px;
+  border-top: 4px solid var(--color-primary);
 }
+.checkout-summary-card h3 { padding-bottom: 8px; border-bottom: 2px solid var(--color-secondary); display: inline-block; }
 
 @media (max-width: 860px) {
   .checkout-layout { grid-template-columns: 1fr; }
@@ -1973,6 +1990,8 @@ textarea { resize: vertical; min-height: 100px; }
   text-align: center;
   box-shadow: var(--shadow-sm);
 }
+.step-card:nth-child(2) .step-icon { background: color-mix(in srgb, var(--color-secondary) 16%, var(--color-white)); }
+.step-card:nth-child(3) .step-icon { background: color-mix(in srgb, var(--color-primary) 16%, var(--color-white)); }
 .step-icon {
   width: 64px;
   height: 64px;

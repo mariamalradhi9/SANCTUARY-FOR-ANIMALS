@@ -9,7 +9,7 @@ import SchedulePickupModal from "@/components/admin/SchedulePickupModal";
 import { getAnimals } from "@/lib/animals";
 import { getApplications } from "@/lib/records";
 import { applyApplicationAction, scheduleApplicationPickup, type ApplicationAction } from "@/lib/admin/bookingActions";
-import { badgeClassFor, formatDate } from "@/lib/format";
+import { badgeClassFor, formatDate, formatTime12 } from "@/lib/format";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Application } from "@/lib/types";
@@ -54,7 +54,7 @@ export default function AdminApplicationsPage() {
     if (a) {
       scheduleApplicationPickup(approvingId, pickupDate, pickupTime);
       setApplications(getApplications());
-      showToast(`Application for ${a.petName} approved — pickup scheduled for ${pickupDate} at ${pickupTime}.`);
+      showToast(`Application for ${a.petName} approved — pickup scheduled for ${pickupDate} at ${formatTime12(pickupTime)}.`);
     }
     setApprovingId(null);
   }
@@ -64,7 +64,7 @@ export default function AdminApplicationsPage() {
     if (!a) return;
     setApplications(getApplications());
     setViewing(a);
-    showToast(`Pickup for ${a.petName} scheduled for ${pickupDate} at ${pickupTime}.`);
+    showToast(`Pickup for ${a.petName} scheduled for ${pickupDate} at ${formatTime12(pickupTime)}.`);
   }
 
   const list = useMemo(() => {
