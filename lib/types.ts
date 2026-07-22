@@ -117,7 +117,7 @@ export interface Assessment {
   evalDate: string;
   breedMix: string;
   weightCondition: string;
-  estAge: string;
+  dob: string;
   specialist: string;
   location: string;
   sex: "" | "M" | "F";

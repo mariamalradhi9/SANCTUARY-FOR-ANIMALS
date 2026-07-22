@@ -367,6 +367,13 @@ section { padding: 64px 0; }
 
 /* ---------------------------------- Forms ---------------------------------- */
 
+.field-error {
+  outline: 2px solid var(--color-danger);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+.field-error > label:first-child { color: var(--color-danger); }
+
 .field {
   margin-bottom: 20px;
 }
@@ -2096,6 +2103,7 @@ textarea { resize: vertical; min-height: 100px; }
 }
 .reports-grid .admin-card { margin-bottom: 0; height: 100%; }
 .reports-grid-loose .admin-card { height: auto; }
+.dash-side-stack { display: flex; flex-direction: column; gap: 24px; }
 
 .report-notes { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .report-notes li { font-size: 0.9rem; color: var(--color-text-muted); padding-left: 4px; }

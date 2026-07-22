@@ -1,13 +1,14 @@
 "use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import ScoreScale from "@/components/admin/ScoreScale";
 import { getAnimals } from "@/lib/animals";
 import { getLatestAssessment, saveAssessment } from "@/lib/records";
 import { logAudit } from "@/lib/admin/audit";
+import { ageLabel } from "@/lib/format";
 import { useToast } from "@/lib/admin/useToast";
 import { usePageTitle } from "@/lib/usePageTitle";
 import type { Assessment } from "@/lib/types";
@@ -54,8 +55,31 @@ function toggleArr(arr: string[], value: string): string[] {
   return arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
 }
 
+const STEP_REQUIRED_FIELDS: Record<number, (keyof FormState)[]> = {
+  1: ["dogName", "evalDate", "breedMix", "weightCondition", "sex", "altered", "vaccinated", "goodWithKids", "specialist", "location"],
+  3: ["preyDrive", "foodDrive", "socialDrive"],
+  4: ["socialOrientation", "socialYield"],
+  5: ["incidentHistory"],
+  6: ["disposition", "signSpecialist", "signature", "signDate"],
+};
+
+function validateStep(n: number, form: FormState): Set<string> {
+  const invalid = new Set<string>();
+  (STEP_REQUIRED_FIELDS[n] || []).forEach((key) => {
+    const val = form[key];
+    if (typeof val === "string" && !val.trim()) invalid.add(key);
+  });
+  if (n === 2) {
+    PROFILE_METRIC_MARKERS.forEach(({ key }) => {
+      if (!form.profileScores[key]) invalid.add(`profileScores.${key}`);
+    });
+  }
+  return invalid;
+}
+
 function AssessmentPageInner() {
   usePageTitle("Behavioral Assessment — Admin — Aamal Almoayyed Sanctuary");
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { message, show, showToast } = useToast();
   const stepperRef = useRef<HTMLDivElement>(null);
@@ -65,6 +89,12 @@ function AssessmentPageInner() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saved, setSaved] = useState(false);
+  const [errors, setErrors] = useState<Set<string>>(new Set());
+
+  const selectedAnimal = animals.find((p) => p.id === petId);
+  function fieldClass(base: string, key: string) {
+    return errors.has(key) ? `${base} field-error` : base;
+  }
 
   useEffect(() => {
     const preselect = searchParams.get("pet");
@@ -92,10 +122,25 @@ function AssessmentPageInner() {
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+    setErrors((prev) => {
+      if (!prev.has(key as string)) return prev;
+      const next = new Set(prev);
+      next.delete(key as string);
+      return next;
+    });
   }
 
   function goToStep(n: number) {
     if (n < 1 || n > TOTAL_STEPS) return;
+    if (n > step) {
+      const invalid = validateStep(step, form);
+      if (invalid.size > 0) {
+        setErrors(invalid);
+        showToast("Please fill in all required fields before continuing.");
+        return;
+      }
+    }
+    setErrors(new Set());
     setStep(n);
     if (stepperRef.current) {
       window.scrollTo({ top: stepperRef.current.offsetTop - 100, behavior: "smooth" });
@@ -108,10 +153,17 @@ function AssessmentPageInner() {
       alert("Please select which animal this assessment is for.");
       return;
     }
+    const invalid = validateStep(6, form);
+    if (invalid.size > 0) {
+      setErrors(invalid);
+      showToast("Please fill in all required fields before saving.");
+      return;
+    }
 
     const data: Assessment = {
       petId,
       ...form,
+      estAge: selectedAnimal ? ageLabel(selectedAnimal.dob) : form.estAge,
       savedAt: new Date().toISOString(),
     };
     saveAssessment(data);
@@ -119,8 +171,11 @@ function AssessmentPageInner() {
     logAudit("assessment-saved", `Behavioral assessment for ${data.dogName || "an animal"} was ${isUpdate ? "updated" : "recorded"} (disposition: ${data.disposition || "not set"}).`);
 
     setSaved(true);
-    setTimeout(() => setSaved(false), 4000);
     showToast(`Assessment for ${data.dogName || "animal"} saved and published.`);
+    setTimeout(() => {
+      setSaved(false);
+      router.back();
+    }, 1500);
   }
 
   return (
@@ -168,19 +223,19 @@ function AssessmentPageInner() {
                 <div className="assess-step active" data-step="1">
                   <h3 className="section-title"><span className="sec-icon">🐕</span> I. Specimen &amp; Intake Data</h3>
                   <div className="row-2">
-                    <div className="field"><label htmlFor="dogName">Dog Name / ID</label><input type="text" id="dogName" value={form.dogName} onChange={(e) => set("dogName", e.target.value)} /></div>
-                    <div className="field"><label htmlFor="evalDate">Date of Evaluation</label><input type="date" id="evalDate" value={form.evalDate} onChange={(e) => set("evalDate", e.target.value)} /></div>
+                    <div className={fieldClass("field", "dogName")}><label htmlFor="dogName">Dog Name / ID</label><input type="text" id="dogName" value={form.dogName} onChange={(e) => set("dogName", e.target.value)} /></div>
+                    <div className={fieldClass("field", "evalDate")}><label htmlFor="evalDate">Date of Evaluation</label><input type="date" id="evalDate" value={form.evalDate} onChange={(e) => set("evalDate", e.target.value)} /></div>
                   </div>
-                  <div className="field"><label htmlFor="breedMix">Phenotype / Breed Mix</label><input type="text" id="breedMix" value={form.breedMix} onChange={(e) => set("breedMix", e.target.value)} /></div>
+                  <div className={fieldClass("field", "breedMix")}><label htmlFor="breedMix">Phenotype / Breed Mix</label><input type="text" id="breedMix" value={form.breedMix} onChange={(e) => set("breedMix", e.target.value)} /></div>
                   <div className="row-2">
-                    <div className="field">
+                    <div className={fieldClass("field", "sex")}>
                       <label>Sex</label>
                       <div className="choice-group">
                         <label><input type="radio" name="sex" checked={form.sex === "M"} onChange={() => set("sex", "M")} /> M</label>
                         <label><input type="radio" name="sex" checked={form.sex === "F"} onChange={() => set("sex", "F")} /> F</label>
                       </div>
                     </div>
-                    <div className="field">
+                    <div className={fieldClass("field", "altered")}>
                       <label>Altered (Neutered/Spayed)</label>
                       <div className="choice-group">
                         <label><input type="radio" name="altered" checked={form.altered === "Y"} onChange={() => set("altered", "Y")} /> Y</label>
@@ -189,18 +244,18 @@ function AssessmentPageInner() {
                     </div>
                   </div>
                   <div className="row-2">
-                    <div className="field"><label htmlFor="weightCondition">Weight / Condition</label><input type="text" id="weightCondition" value={form.weightCondition} onChange={(e) => set("weightCondition", e.target.value)} /></div>
-                    <div className="field"><label htmlFor="estAge">Estimated Age</label><input type="text" id="estAge" value={form.estAge} onChange={(e) => set("estAge", e.target.value)} /></div>
+                    <div className={fieldClass("field", "weightCondition")}><label htmlFor="weightCondition">Weight / Condition</label><input type="text" id="weightCondition" value={form.weightCondition} onChange={(e) => set("weightCondition", e.target.value)} /></div>
+                    <div className="field"><label htmlFor="estAge">Estimated Age</label><input type="text" id="estAge" value={selectedAnimal ? ageLabel(selectedAnimal.dob) : ""} disabled /><p className="hint">Computed automatically from the animal&apos;s date of birth.</p></div>
                   </div>
                   <div className="row-2">
-                    <div className="field">
+                    <div className={fieldClass("field", "vaccinated")}>
                       <label>Vaccinated</label>
                       <div className="choice-group">
                         <label><input type="radio" name="vaccinated" checked={form.vaccinated === "Y"} onChange={() => set("vaccinated", "Y")} /> Y</label>
                         <label><input type="radio" name="vaccinated" checked={form.vaccinated === "N"} onChange={() => set("vaccinated", "N")} /> N</label>
                       </div>
                     </div>
-                    <div className="field">
+                    <div className={fieldClass("field", "goodWithKids")}>
                       <label>Good with Kids</label>
                       <div className="choice-group">
                         <label><input type="radio" name="goodWithKids" checked={form.goodWithKids === "Y"} onChange={() => set("goodWithKids", "Y")} /> Y</label>
@@ -209,8 +264,8 @@ function AssessmentPageInner() {
                     </div>
                   </div>
                   <div className="row-2">
-                    <div className="field"><label htmlFor="specialist">Placement &amp; Integration Specialist</label><input type="text" id="specialist" value={form.specialist} onChange={(e) => set("specialist", e.target.value)} /></div>
-                    <div className="field"><label htmlFor="location">Location</label><input type="text" id="location" value={form.location} onChange={(e) => set("location", e.target.value)} /></div>
+                    <div className={fieldClass("field", "specialist")}><label htmlFor="specialist">Placement &amp; Integration Specialist</label><input type="text" id="specialist" value={form.specialist} onChange={(e) => set("specialist", e.target.value)} /></div>
+                    <div className={fieldClass("field", "location")}><label htmlFor="location">Location</label><input type="text" id="location" value={form.location} onChange={(e) => set("location", e.target.value)} /></div>
                   </div>
                   <div className="step-actions no-print">
                     <span></span>
@@ -229,12 +284,21 @@ function AssessmentPageInner() {
                     </thead>
                     <tbody>
                       {PROFILE_METRIC_MARKERS.map(({ key, label, marker }) => (
-                        <tr key={key}>
+                        <tr key={key} className={errors.has(`profileScores.${key}`) ? "field-error" : ""}>
                           <td>{label}</td>
                           <td>
                             <ScoreScale
                               value={form.profileScores[key] || ""}
-                              onChange={(v) => set("profileScores", { ...form.profileScores, [key]: v })}
+                              onChange={(v) => {
+                                setForm((f) => ({ ...f, profileScores: { ...f.profileScores, [key]: v } }));
+                                setErrors((prev) => {
+                                  const errKey = `profileScores.${key}`;
+                                  if (!prev.has(errKey)) return prev;
+                                  const next = new Set(prev);
+                                  next.delete(errKey);
+                                  return next;
+                                });
+                              }}
                             />
                           </td>
                           <td className="marker-cell">{marker}</td>
@@ -254,7 +318,7 @@ function AssessmentPageInner() {
                   <h3 className="section-title"><span className="sec-icon"><img src="/icons/drives.png" alt="" /></span> III. Drive System Analysis (Motivation)</h3>
 
                   <h4 className="sub-title">1. Prey / Toy Drive (Biological Pursuit)</h4>
-                  <div className="option-list">
+                  <div className={fieldClass("option-list", "preyDrive")}>
                     <label className="option-card"><input type="radio" name="preyDrive" checked={form.preyDrive === "Inert"} onChange={() => set("preyDrive", "Inert")} /><span><strong>Inert:</strong> No visual tracking; disinterested in movement.</span></label>
                     <label className="option-card"><input type="radio" name="preyDrive" checked={form.preyDrive === "Investigative"} onChange={() => set("preyDrive", "Investigative")} /><span><strong>Investigative:</strong> Tracks movement; sniffs; no pursuit.</span></label>
                     <label className="option-card"><input type="radio" name="preyDrive" checked={form.preyDrive === "Active"} onChange={() => set("preyDrive", "Active")} /><span><strong>Active:</strong> Commits to pursuit; exhibits &quot;shake&quot; or &quot;kill&quot; bite-down.</span></label>
@@ -262,14 +326,14 @@ function AssessmentPageInner() {
                   </div>
 
                   <h4 className="sub-title">2. Food Drive (Resource Motivation)</h4>
-                  <div className="option-list">
+                  <div className={fieldClass("option-list", "foodDrive")}>
                     <label className="option-card"><input type="radio" name="foodDrive" checked={form.foodDrive === "Functional"} onChange={() => set("foodDrive", "Functional")} /><span><strong>Functional:</strong> Motivated by treats; takes food gently.</span></label>
                     <label className="option-card"><input type="radio" name="foodDrive" checked={form.foodDrive === "Competitive"} onChange={() => set("foodDrive", "Competitive")} /><span><strong>Competitive:</strong> Aggressive snatching; potential for guarding.</span></label>
                     <label className="option-card"><input type="radio" name="foodDrive" checked={form.foodDrive === "Anorectic"} onChange={() => set("foodDrive", "Anorectic")} /><span><strong>Anorectic:</strong> Refuses high-value food due to shutdown/fear.</span></label>
                   </div>
 
                   <h4 className="sub-title">3. Social Drive (Handler Attachment)</h4>
-                  <div className="option-list">
+                  <div className={fieldClass("option-list", "socialDrive")}>
                     <label className="option-card"><input type="radio" name="socialDrive" checked={form.socialDrive === "Independent"} onChange={() => set("socialDrive", "Independent")} /><span><strong>Independent:</strong> Prioritizes environment over human; aloof.</span></label>
                     <label className="option-card"><input type="radio" name="socialDrive" checked={form.socialDrive === "Cooperative"} onChange={() => set("socialDrive", "Cooperative")} /><span><strong>Cooperative:</strong> Checks in with handler; responds to praise.</span></label>
                     <label className="option-card"><input type="radio" name="socialDrive" checked={form.socialDrive === "Anxious/Velcro"} onChange={() => set("socialDrive", "Anxious/Velcro")} /><span><strong>Anxious/Velcro:</strong> Hyper-attachment; distress upon handler exit.</span></label>
@@ -286,7 +350,7 @@ function AssessmentPageInner() {
                   <h3 className="section-title"><span className="sec-icon"><img src="/icons/paw.png" alt="" /></span> IV. Intraspecific Dynamics (Dog-to-Dog)</h3>
 
                   <h4 className="sub-title">A. Social Orientation</h4>
-                  <div className="option-list">
+                  <div className={fieldClass("option-list", "socialOrientation")}>
                     <label className="option-card"><input type="radio" name="socialOrientation" checked={form.socialOrientation === "Pro-Social"} onChange={() => set("socialOrientation", "Pro-Social")} /><span><strong>Pro-Social:</strong> Actively seeks play; uses healthy cut-off signals.</span></label>
                     <label className="option-card"><input type="radio" name="socialOrientation" checked={form.socialOrientation === "Neutral/Tolerant"} onChange={() => set("socialOrientation", "Neutral/Tolerant")} /><span><strong>Neutral/Tolerant:</strong> Ignores others; coexists without engagement.</span></label>
                     <label className="option-card"><input type="radio" name="socialOrientation" checked={form.socialOrientation === "Selective"} onChange={() => set("socialOrientation", "Selective")} /><span><strong>Selective:</strong> Tolerates specific types (e.g., opposite sex only).</span></label>
@@ -310,7 +374,7 @@ function AssessmentPageInner() {
                       ))}
                     </div>
                   </div>
-                  <div className="field">
+                  <div className={fieldClass("field", "socialYield")}>
                     <label>Social Yield — Does dog yield space when pressured?</label>
                     <div className="choice-group">
                       <label><input type="radio" name="socialYield" checked={form.socialYield === "Yes"} onChange={() => set("socialYield", "Yes")} /> Yes</label>
@@ -335,7 +399,7 @@ function AssessmentPageInner() {
                       ))}
                     </div>
                   </div>
-                  <div className="field">
+                  <div className={fieldClass("field", "incidentHistory")}>
                     <label htmlFor="incidentHistory">Incident History</label>
                     <textarea id="incidentHistory" rows={6} placeholder="Describe any incidents, dates, and context…" value={form.incidentHistory} onChange={(e) => set("incidentHistory", e.target.value)} />
                   </div>
@@ -349,7 +413,7 @@ function AssessmentPageInner() {
               {step === 6 && (
                 <div className="assess-step active" data-step="6">
                   <h3 className="section-title"><span className="sec-icon">🏁</span> VI. Final Disposition</h3>
-                  <div className="disposition-list">
+                  <div className={fieldClass("disposition-list", "disposition")}>
                     <label className="disposition-option level-green">
                       <input type="radio" name="disposition" checked={form.disposition === "Level 1 (Green)"} onChange={() => set("disposition", "Level 1 (Green)")} />
                       <span><strong>Level 1 (Green): Public-Ready.</strong> High sociability; no guarding.</span>
@@ -377,10 +441,10 @@ function AssessmentPageInner() {
                   </div>
 
                   <h3 className="section-title">Sign-Off</h3>
-                  <div className="field"><label htmlFor="signSpecialist">Placement &amp; Integration Specialist</label><input type="text" id="signSpecialist" value={form.signSpecialist} onChange={(e) => set("signSpecialist", e.target.value)} /></div>
+                  <div className={fieldClass("field", "signSpecialist")}><label htmlFor="signSpecialist">Placement &amp; Integration Specialist</label><input type="text" id="signSpecialist" value={form.signSpecialist} onChange={(e) => set("signSpecialist", e.target.value)} /></div>
                   <div className="row-2">
-                    <div className="field"><label htmlFor="signature">Signature</label><input type="text" id="signature" placeholder="Type full name to sign" value={form.signature} onChange={(e) => set("signature", e.target.value)} /></div>
-                    <div className="field"><label htmlFor="signDate">Date</label><input type="date" id="signDate" value={form.signDate} onChange={(e) => set("signDate", e.target.value)} /></div>
+                    <div className={fieldClass("field", "signature")}><label htmlFor="signature">Signature</label><input type="text" id="signature" placeholder="Type full name to sign" value={form.signature} onChange={(e) => set("signature", e.target.value)} /></div>
+                    <div className={fieldClass("field", "signDate")}><label htmlFor="signDate">Date</label><input type="date" id="signDate" value={form.signDate} onChange={(e) => set("signDate", e.target.value)} /></div>
                   </div>
 
                   <div className="step-actions no-print">

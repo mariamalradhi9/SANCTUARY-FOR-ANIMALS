@@ -209,7 +209,12 @@ export default function AdminDashboardPage() {
                         {kennelAnimals.map((a) => (
                           <tr key={a.id}>
                             <td><strong>{a.kennelNumber}</strong></td>
-                            <td>{a.name}</td>
+                            <td>
+                              <div className="admin-user-cell">
+                                <img src={a.img} alt={a.name} />
+                                <div>{a.name}</div>
+                              </div>
+                            </td>
                             <td>
                               {a.aggressionLevel ? (
                                 <span className={`badge ${AGGRESSION_BADGE[a.aggressionLevel] || "badge-warning"}`}>{a.aggressionLevel}</span>
@@ -226,6 +231,7 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
+              <div className="dash-side-stack">
               <div className="admin-card">
                 <div className="admin-card-head"><h3>Animals by Type</h3></div>
                 {totalAnimals === 0 ? (
@@ -278,48 +284,6 @@ export default function AdminDashboardPage() {
                   ))}
                 </ul>
               </div>
-            </div>
-
-            <div className="reports-grid">
-              <div className="admin-card">
-                <div className="admin-card-head">
-                  <h3>Recent Booking Requests</h3>
-                  <Link href="/admin/bookings" className="btn btn-ghost btn-sm">View all</Link>
-                </div>
-                {recentBookings.length === 0 ? (
-                  <p className="admin-empty">No booking requests yet.</p>
-                ) : (
-                  <div className="table-scroll">
-                    <table className="admin-table">
-                      <thead>
-                        <tr><th>User</th><th>Animal</th><th>Activity</th><th>Date &amp; Time</th><th>Duration</th><th>Status</th><th>Actions</th></tr>
-                      </thead>
-                      <tbody>
-                        {recentBookings.map((b) => (
-                          <tr key={b.id}>
-                            <td>
-                              <div className="admin-user-cell">
-                                <span className="admin-stat-icon" style={{ width: 38, height: 38, fontSize: "0.9rem" }}>{initials(b.name)}</span>
-                                <div><strong>{b.name}</strong><span>{b.phone}</span></div>
-                              </div>
-                            </td>
-                            <td>{b.petName}</td>
-                            <td><ActivityLabel activity={b.activity} text={ACTIVITY_LABELS[b.activity] || b.activity} /></td>
-                            <td>{formatDate(b.date)}<br /><span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>{b.slot}</span></td>
-                            <td>{b.duration || "—"}</td>
-                            <td><span className={`badge ${badgeClassFor(b.status)}`}>{b.status}</span></td>
-                            <td>
-                              <div className="row-actions">
-                                <BookingActionButtons status={b.status} onAction={(action) => handleBookingAction(b.id, action)} />
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
 
               <div className="admin-card">
                 <div className="admin-card-head"><h3>Quick Actions</h3></div>
@@ -330,6 +294,47 @@ export default function AdminDashboardPage() {
                   <Link href="/admin/reports" className="quick-action"><img src="/icons/export.png" alt="" /> Generate Report</Link>
                 </div>
               </div>
+              </div>
+            </div>
+
+            <div className="admin-card">
+              <div className="admin-card-head">
+                <h3>Recent Booking Requests</h3>
+                <Link href="/admin/bookings" className="btn btn-ghost btn-sm">View all</Link>
+              </div>
+              {recentBookings.length === 0 ? (
+                <p className="admin-empty">No booking requests yet.</p>
+              ) : (
+                <div className="table-scroll">
+                  <table className="admin-table">
+                    <thead>
+                      <tr><th>User</th><th>Animal</th><th>Activity</th><th>Date &amp; Time</th><th>Duration</th><th>Status</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                      {recentBookings.map((b) => (
+                        <tr key={b.id}>
+                          <td>
+                            <div className="admin-user-cell">
+                              <span className="admin-stat-icon" style={{ width: 38, height: 38, fontSize: "0.9rem" }}>{initials(b.name)}</span>
+                              <div><strong>{b.name}</strong><span>{b.phone}</span></div>
+                            </div>
+                          </td>
+                          <td>{b.petName}</td>
+                          <td><ActivityLabel activity={b.activity} text={ACTIVITY_LABELS[b.activity] || b.activity} /></td>
+                          <td>{formatDate(b.date)}<br /><span style={{ color: "var(--color-text-muted)", fontSize: "0.78rem" }}>{b.slot}</span></td>
+                          <td>{b.duration || "—"}</td>
+                          <td><span className={`badge ${badgeClassFor(b.status)}`}>{b.status}</span></td>
+                          <td>
+                            <div className="row-actions">
+                              <BookingActionButtons status={b.status} onAction={(action) => handleBookingAction(b.id, action)} />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
         </main>
