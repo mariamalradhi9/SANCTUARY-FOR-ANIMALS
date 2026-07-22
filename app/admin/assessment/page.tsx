@@ -116,8 +116,11 @@ function AssessmentPageInner() {
       setForm(fromAssessment(existing, animal?.name || ""));
       showToast(`Loaded existing assessment for ${existing.dogName || "this animal"} — editing in place.`);
     } else {
-      setForm({ ...EMPTY_FORM, dogName: animal?.name || "" });
-    }
+setForm({
+  ...EMPTY_FORM,
+  dogName: animal?.name || "",
+  dob: animal?.dob || "",
+});    }
   }
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -163,7 +166,7 @@ function AssessmentPageInner() {
     const data: Assessment = {
       petId,
       ...form,
-      dob: selectedAnimal ? selectedAnimal.dob : form.dob,
+dob: form.dob,
       savedAt: new Date().toISOString(),
     };
     saveAssessment(data);
@@ -246,10 +249,19 @@ function AssessmentPageInner() {
                   <div className="row-2">
                     <div className={fieldClass("field", "weightCondition")}><label htmlFor="weightCondition">Weight / Condition</label><input type="text" id="weightCondition" value={form.weightCondition} onChange={(e) => set("weightCondition", e.target.value)} /></div>
                     <div className="field">
-                      <label htmlFor="dob">Date of Birth</label>
-                      <input type="text" id="dob" value={selectedAnimal?.dob ? `${formatDate(selectedAnimal.dob)} (${ageLabel(selectedAnimal.dob)} old)` : ""} disabled />
-                      <p className="hint">Pulled from the animal&apos;s profile — age is calculated automatically. To correct it, edit the animal&apos;s date of birth from the Animals page.</p>
-                    </div>
+  <label htmlFor="dob">Date of Birth</label>
+
+  <input
+    type="date"
+    id="dob"
+    value={form.dob}
+    onChange={(e) => set("dob", e.target.value)}
+  />
+
+  <p className="hint">
+    Age will be calculated automatically from this date.
+  </p>
+</div>
                   </div>
                   <div className="row-2">
                     <div className={fieldClass("field", "vaccinated")}>
